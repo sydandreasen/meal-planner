@@ -10,10 +10,12 @@ import {
 } from "react-router-dom";
 import "antd/dist/antd.css";
 import "../SCSS/UserHandler.scss";
+import SignUp from "./SignUp.js";
+import Login from "./Login.js";
 
 function UserHandler(props) {
   const onFinish = (values) => {
-    console.log("Form value: ", values);
+    !!props.exists ? Login(values) : SignUp(values);
   };
 
   let hour = new Date().getHours();
@@ -43,7 +45,6 @@ function UserHandler(props) {
         onFinish={onFinish}
       >
         <Form.Item
-          className="item"
           name="email"
           rules={[
             { required: true, message: "Please enter your email address" },
@@ -55,7 +56,7 @@ function UserHandler(props) {
             placeholder="Email Address"
           ></Input>
         </Form.Item>
-        <Form.Item>
+        <Form.Item name="password" hasFeedback>
           <Input
             prefix={<LockOutlined className="item-icon" />}
             type="password"
@@ -64,19 +65,42 @@ function UserHandler(props) {
         </Form.Item>
         {props.exists ? (
           <Form.Item className="remember-forgot">
-            <Form.Item
+            {/* <Form.Item
               name="remember"
               className="remember-me"
               valuePropName="checked"
             >
               <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-            <a className="forgot-password" href="">
-              Forgot password
-            </a>
+            </Form.Item> */}
+            <Link to="/forgot-password">
+              <a className="forgot-password" href="">
+                Forgot password
+              </a>
+            </Link>
           </Form.Item>
         ) : (
-          <Form.Item>
+          <Form.Item
+            name="confirmPassword"
+            dependencies={["password"]}
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: "Please confirm your password!",
+              },
+              ({ getFieldValue }) => ({
+                validator(rule, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+
+                  return Promise.reject(
+                    "The two passwords that you entered do not match!"
+                  );
+                },
+              }),
+            ]}
+          >
             <Input
               prefix={<LockOutlined className="item-icon" />}
               type="password"

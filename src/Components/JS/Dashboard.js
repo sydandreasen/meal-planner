@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import application from "../../Firebase";
+import application from "./Firebase.js";
 import { Button } from "antd";
 
 function Dashboard(props) {

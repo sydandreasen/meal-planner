@@ -10,4 +10,6 @@ const application = firebase.initializeApp({
   messagingSenderId: process.env.REACT_APP_FIREBASE_SENDER_ID, // note that firebase console provided more keys, youtube video could be outdated here
 });
 
+export const auth = firebase.auth();
+
 export default application;
