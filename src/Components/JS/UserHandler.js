@@ -1,13 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-  Link,
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 import "antd/dist/antd.css";
 import "../SCSS/UserHandler.scss";
 import SignUp from "./SignUp.js";
@@ -56,7 +50,7 @@ function UserHandler(props) {
             placeholder="Email Address"
           ></Input>
         </Form.Item>
-        <Form.Item name="password" hasFeedback>
+        <Form.Item name="password">
           <Input
             prefix={<LockOutlined className="item-icon" />}
             type="password"
@@ -72,10 +66,8 @@ function UserHandler(props) {
             >
               <Checkbox>Remember me</Checkbox>
             </Form.Item> */}
-            <Link to="/forgot-password">
-              <a className="forgot-password" href="">
-                Forgot password
-              </a>
+            <Link to="/forgot-password" className="forgot-password">
+              Forgot password
             </Link>
           </Form.Item>
         ) : (

@@ -8,14 +8,7 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [emailHasBeenSent, setEmailHasBeenSent] = useState(false);
   const [error, setError] = useState(null);
-  //   const onChangeHandler = (values) => {
-  //     const { name, value } = event.currentTarget;
-  //     if (name === "userEmail") {
-  //       setEmail(value);
-  //     }
-  //   };
   const sendResetEmail = (values) => {
-    // event.preventDefault();
     setEmail(values.email);
     auth
       .sendPasswordResetEmail(values.email)
@@ -55,7 +48,7 @@ const ForgotPassword = () => {
         ""
       )}
       <Link to="/login" className="back">
-        <a href="">Back to Login</a>
+        Back to Login
       </Link>
     </div>
   );

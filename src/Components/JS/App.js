@@ -1,19 +1,20 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
-  Link,
 } from "react-router-dom";
+import { Spin } from "antd";
 import logo from "../../Images/logo.png";
 import "../SCSS/App.scss";
 import UserHandler from "./UserHandler.js";
 import Dashboard from "./Dashboard.js";
-import { AuthProvider, AuthContext } from "./Auth.js";
+import { AuthProvider } from "./Auth.js";
 import PrivateRoute from "./PrivateRoute.js";
 import application from "./Firebase.js";
 import ForgotPassword from "./ForgotPassword.js";
+import { loadingMessage } from "./Commons.js";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -26,6 +27,8 @@ function App() {
     });
   }, []);
 
+  let message = loadingMessage();
+
   return (
     <div className="App">
       <header>
@@ -33,7 +36,10 @@ function App() {
         <h1>Meal Planner</h1>
       </header>
       {pending ? (
-        <div>Loading...</div>
+        <div>
+          <h1>{message}</h1>
+          <Spin size={"large"} spinning={true} />
+        </div>
       ) : (
         <AuthProvider>
           <Router>

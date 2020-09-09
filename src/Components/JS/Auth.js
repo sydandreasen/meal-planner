@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import application from "./Firebase.js";
+// import { Spin } from "antd";
+// import { loadingMessage } from "./Commons.js";
 
 export const AuthContext = React.createContext();
 
@@ -19,7 +21,14 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   if (pending) {
-    return <div>Loading...</div>;
+    // let message = loadingMessage();
+    // console.log(message);
+    return (
+      <div>
+        {/* <p>{message}</p>
+        <Spin size={"large"} spinning={true} /> */}
+      </div>
+    );
   }
 
   return (

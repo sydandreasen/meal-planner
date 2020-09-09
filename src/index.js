@@ -5,9 +5,8 @@ import App from "./Components/JS/App";
 import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  // by default, App is wrapped in React.StrictMode, but removed to remove warning about findDOMNode, which is used by antd Button
+  <App />,
   document.getElementById("root")
 );
 

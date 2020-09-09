@@ -1,14 +1,26 @@
 import React, { useState } from "react";
 import application from "./Firebase.js";
 import { Button } from "antd";
+import NavMenu from "./NavMenu.js";
+import MealPlanning from "./MealPlanning.js";
+import Recipes from "./Recipes.js";
+import Groceries from "./Groceries.js";
 
 function Dashboard(props) {
+  const [page, setPage] = useState("meal planning");
+
   return (
     <div>
-      <h1>Welcome to your dashboard.</h1>
-      <Button type="primary" onClick={() => application.auth().signOut()}>
-        Sign out
-      </Button>
+      <NavMenu page={(showPage) => setPage(showPage)} />
+      {page === "meal planning" ? (
+        <MealPlanning />
+      ) : page === "recipes" ? (
+        <Recipes />
+      ) : page === "groceries" ? (
+        <Groceries />
+      ) : (
+        ""
+      )}
     </div>
   );
 }

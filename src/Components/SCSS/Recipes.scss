@@ -1,0 +1,51 @@
+.recipe-page {
+  width: 100%;
+  padding: 0% 7%;
+
+  h1 {
+    width: 100%;
+    text-align: center;
+  }
+
+  .button-wrapper {
+    width: 100%;
+
+    Button {
+      margin: 1%;
+    }
+  }
+
+  .recipe-wrapper {
+    .recipe-card {
+      display: inline-flex;
+      margin: 0.2%;
+    }
+  }
+}
+
+.ingredients {
+  margin: 1% 0;
+  margin-top: 4%;
+}
+
+.instructions {
+  margin: 1% 0;
+
+  h4 {
+    margin-top: 4%;
+  }
+
+  ol {
+    padding: 4%;
+    padding-top: 0;
+  }
+}
+
+.details {
+}
+
+.recipe {
+  img {
+    // margin: auto; // try to center image
+  }
+}
