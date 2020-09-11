@@ -10,7 +10,7 @@ function Recipes(props) {
   return (
     <div className="recipe-page">
       <h1>Welcome to your Recipe Dashboard</h1>
-      <div className="button-wrapper">
+      <div className="button-wrapper row">
         <Button type="primary">Import New</Button>
         <Button type="primary">Add Manually</Button>
       </div>

@@ -83,6 +83,7 @@ export const Recipe = (props) => {
       title={"Example Banana Bread"}
     >
       <img alt="recipe cover image" src={props.img} />
+      <RecipeDetail />
       <RecipeIngredients />
       <RecipeInstructions />
     </Modal>

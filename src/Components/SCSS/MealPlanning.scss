@@ -1,0 +1,37 @@
+$blue: #3399ff;
+
+.planning-page {
+  width: 100%;
+  padding: 0% 7%;
+
+  h1 {
+    width: 100%;
+    text-align: center;
+  }
+
+  .button-wrapper {
+    width: 100%;
+
+    .left-group {
+      display: inline;
+      margin: 0 5%;
+    }
+
+    .right-group {
+      display: inline;
+      margin: 0 5%;
+    }
+
+    Button {
+      margin: 1%;
+    }
+  }
+
+  .calendar {
+    border: solid $blue 1px;
+    margin: auto;
+    width: 95%;
+    min-width: 350px;
+    padding: 1%;
+  }
+}

@@ -41,3 +41,16 @@
     }
   }
 }
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0% 7%;
+}
+
+.column {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}

@@ -1,0 +1,69 @@
+$blue: rgb(51, 153, 255);
+$lightblue: rgba(51, 153, 255, 0.25);
+$green: rgb(59, 162, 81);
+$lightgreen: rgba(59, 162, 81, 0.25);
+$red: rgb(248, 31, 7);
+$lightred: rgba(248, 31, 7, 0.25);
+.monthly {
+  width: 100%;
+
+  .header {
+    display: inline-block;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 0.5%;
+    margin-bottom: 1%;
+
+    h2 {
+      margin: 0% 8%;
+      text-align: center;
+      display: inline;
+    }
+  }
+
+  .day-card {
+    max-width: 200px;
+    border: solid 2px $blue;
+    padding: 0.2%;
+
+    .day-num {
+      border: $blue solid 1px;
+      border-radius: 50%;
+      width: 1.5vw;
+      height: 1.5vw;
+      padding: 0.75%;
+      margin: 1% 0;
+      font-weight: bold;
+    }
+
+    .total-cals {
+      text-align: right;
+      padding: 0% 2%;
+      font-weight: bold;
+    }
+
+    .meals {
+      margin: 0.5%;
+
+      .meal {
+        margin: 1% 0;
+        padding: 0% 2%;
+
+        .ant-descriptions-item-content {
+          text-align: right;
+        }
+      }
+      .Breakfast {
+        background: $lightred;
+      }
+
+      .Lunch {
+        background: $lightblue;
+      }
+
+      .Dinner {
+        background: $lightgreen;
+      }
+    }
+  }
+}
