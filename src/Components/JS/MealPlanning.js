@@ -7,7 +7,7 @@ import { Daily } from "./Daily.js";
 
 function MealPlanning(props) {
   const [view, setView] = useState("weekly");
-
+  const [currentDate, setCurrentDate] = useState(new Date());
   return (
     <div className="planning-page">
       <h1>Welcome to your Meal Planning Dashboard</h1>
@@ -15,6 +15,9 @@ function MealPlanning(props) {
         <div className="left-group">
           <Button type="primary">Edit Meals</Button>
           <Button type="primary">Export Plan</Button>
+          <Button type="primary" onClick={() => setCurrentDate(new Date())}>
+            Jump to Today
+          </Button>
         </div>
         <div className="right-group">
           <Button type="primary" onClick={() => setView("monthly")}>
@@ -30,7 +33,10 @@ function MealPlanning(props) {
       </div>
       <div className="calendar">
         {view === "monthly" ? (
-          <Monthly />
+          <Monthly
+            currentDate={currentDate}
+            setCurrentDate={(date) => setCurrentDate(date)}
+          />
         ) : view === "weekly" ? (
           <Weekly />
         ) : view === "daily" ? (

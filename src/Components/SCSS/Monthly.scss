@@ -1,9 +1,9 @@
-$blue: rgb(51, 153, 255);
-$lightblue: rgba(51, 153, 255, 0.25);
-$green: rgb(59, 162, 81);
-$lightgreen: rgba(59, 162, 81, 0.25);
-$red: rgb(248, 31, 7);
-$lightred: rgba(248, 31, 7, 0.25);
+$blue: rgba(51, 153, 255, 0.3);
+$lightblue: rgba(51, 153, 255, 0.2);
+$green: rgba(59, 162, 81, 0.3);
+$lightgreen: rgba(59, 162, 81, 0.2);
+$red: rgba(248, 31, 7, 0.3);
+$lightred: rgba(248, 31, 7, 0.2);
 .monthly {
   width: 100%;
 
@@ -30,8 +30,8 @@ $lightred: rgba(248, 31, 7, 0.25);
   }
 
   .day-card {
-    max-width: 200px;
-    border: solid 2px $blue;
+    min-width: 125px;
+    border: solid 2px black;
     padding: 0.15%;
 
     &:hover {
@@ -39,43 +39,70 @@ $lightred: rgba(248, 31, 7, 0.25);
     }
 
     .day-num {
-      border: $blue solid 1px;
-      border-radius: 50%;
-      width: 1.5vw;
-      height: 1.5vw;
-      padding: 0.75%;
-      margin: 1% 0;
-      font-weight: bold;
+      float: left;
+
+      p {
+        border: black solid 1px;
+        border-radius: 50%;
+        width: 1.5vw;
+        font-size: calc(8px + 0.5vw);
+        font-weight: bold;
+        min-width: 13px;
+        min-height: 10px;
+      }
     }
 
     .total-cals {
-      text-align: right;
-      padding: 0% 2%;
+      display: inline;
       font-weight: bold;
+      font-size: calc(8px + 0.5vw);
     }
 
     .meals {
       margin: 0.5%;
+      margin-top: 1.5%;
+      padding-top: 1.5%;
 
       .meal {
         margin: 1% 0;
         padding: 0% 2%;
 
+        .ant-descriptions-item-label {
+          font-size: calc(8px + 0.5vw);
+        }
+
         .ant-descriptions-item-content {
           text-align: right;
+          font-size: calc(8px + 0.5vw);
         }
       }
-      .Breakfast {
+      .lightred {
         background: $lightred;
       }
 
-      .Lunch {
+      .red {
+        background: $red;
+      }
+
+      .lightblue {
         background: $lightblue;
       }
 
-      .Dinner {
+      .blue {
+        background: $blue;
+      }
+
+      .lightgreen {
         background: $lightgreen;
       }
+
+      .green {
+        background: $green;
+      }
     }
+  }
+
+  .inactive-month {
+    background: rgb(220, 220, 220);
   }
 }
