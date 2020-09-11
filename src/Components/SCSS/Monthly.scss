@@ -14,8 +14,16 @@ $lightred: rgba(248, 31, 7, 0.25);
     margin-top: 0.5%;
     margin-bottom: 1%;
 
+    .nav-icon {
+      font-size: 32px;
+      &:hover {
+        color: $blue;
+      }
+    }
+
     h2 {
       margin: 0% 8%;
+      font-size: 28px;
       text-align: center;
       display: inline;
     }
@@ -24,7 +32,11 @@ $lightred: rgba(248, 31, 7, 0.25);
   .day-card {
     max-width: 200px;
     border: solid 2px $blue;
-    padding: 0.2%;
+    padding: 0.15%;
+
+    &:hover {
+      // what effects to add on hover???
+    }
 
     .day-num {
       border: $blue solid 1px;

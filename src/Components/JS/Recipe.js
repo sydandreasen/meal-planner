@@ -102,7 +102,6 @@ export const RecipeCard = (props) => {
     <div className="recipe-card">
       <Card
         onClick={() => {
-          console.log("clicked recipe");
           setShowRecipe(true);
         }}
         cover={<img alt="recipe cover image" src={cardImgSrc} />}

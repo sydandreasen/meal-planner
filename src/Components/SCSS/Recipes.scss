@@ -30,6 +30,7 @@
 
 .instructions {
   margin: 1% 0;
+  text-align: left;
 
   h4 {
     margin-top: 4%;
@@ -46,8 +47,6 @@
   margin-top: 4%;
 }
 
-.recipe {
-  img {
-    // margin: auto; // try to center image
-  }
+.whole-recipe {
+  text-align: center !important;
 }
