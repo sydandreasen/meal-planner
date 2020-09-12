@@ -1,4 +1,4 @@
-$blue: #3399ff;
+$blue: #1890ff;
 
 .planning-page {
   width: 100%;
@@ -24,6 +24,27 @@ $blue: #3399ff;
 
     Button {
       margin: 1%;
+    }
+    Select {
+      margin: 1%;
+    }
+    .ant-select {
+      .ant-select-selector {
+        background: $blue;
+        color: white;
+        border: none;
+        box-shadow: none !important;
+      }
+
+      .ant-select-arrow {
+        color: white;
+      }
+    }
+
+    .ant-select-open {
+      .ant-select-selection-item {
+        opacity: 1;
+      }
     }
   }
 

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Description, Descriptions, Tooltip } from "antd";
+import React from "react";
+import { Descriptions, Tooltip, Badge } from "antd";
 import {
   LeftOutlined,
   RightOutlined,
@@ -9,7 +9,6 @@ import {
 import "../SCSS/Monthly.scss";
 
 export const Monthly = (props) => {
-  const today = new Date();
   const currentDate = props.currentDate;
   const months = [
     "January",
@@ -54,7 +53,6 @@ export const Monthly = (props) => {
     newDate.setDate(newDate.getDate() + 1);
     dates.push({ date: newDate, inCurrentMonth: false });
   }
-  console.log(dates);
   return (
     <div className="monthly">
       <div className="header">
@@ -101,76 +99,106 @@ export const Monthly = (props) => {
         </Tooltip>
       </div>
       <table>
-        <tr>
-          <th>Sunday</th>
-          <th>Monday</th>
-          <th>Tuesday</th>
-          <th>Wednesday</th>
-          <th>Thursday</th>
-          <th>Friday</th>
-          <th>Saturday</th>
-        </tr>
-        <tr>
-          <Week weekNum={1} dates={dates} />
-        </tr>
-        <tr>
-          <Week weekNum={2} dates={dates} />
-        </tr>
-        <tr>
-          <Week weekNum={3} dates={dates} />
-        </tr>
-        <tr>
-          <Week weekNum={4} dates={dates} />
-        </tr>
-        <tr>
-          <Week weekNum={5} dates={dates} />
-        </tr>
+        <thead>
+          <tr>
+            <th>Sunday</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <Week
+              weekNum={1}
+              dates={dates}
+              currentDate={currentDate}
+              setCurrentDate={props.setCurrentDate}
+            />
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+            <Week
+              weekNum={2}
+              dates={dates}
+              currentDate={currentDate}
+              setCurrentDate={props.setCurrentDate}
+            />
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+            <Week
+              weekNum={3}
+              dates={dates}
+              currentDate={currentDate}
+              setCurrentDate={props.setCurrentDate}
+            />
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+            <Week
+              weekNum={4}
+              dates={dates}
+              currentDate={currentDate}
+              setCurrentDate={props.setCurrentDate}
+            />
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+            <Week
+              weekNum={5}
+              dates={dates}
+              currentDate={currentDate}
+              setCurrentDate={props.setCurrentDate}
+            />
+          </tr>
+        </tbody>
       </table>
-      {/* {days.map((day) => (
-        <DayCard dayNum={day} />
-      ))} */}
     </div>
   );
 };
 
 export const MonthlyMeal = (props) => {
-  const className = `meal ${props.color}`;
   return (
-    <Descriptions
-      title=""
-      boredered
-      column={1}
-      size={"small"}
-      className={className}
-    >
-      <Descriptions.Item label={props.mealName}>1234 cals</Descriptions.Item>
+    <Descriptions title="" column={1} size={"small"} className={"meal"}>
+      <Descriptions.Item
+        label={<Badge color={props.color} text={props.mealName} />}
+      >
+        1234 cals
+      </Descriptions.Item>
     </Descriptions>
   );
 };
 
 export const DayCard = (props) => {
-  let dayClassName = props.inCurrentMonth
-    ? "day-card"
-    : "day-card inactive-month";
+  let dateCompare1 = props.date.toDateString();
+  let dateCompare2 = props.currentDate.toDateString();
+  let dayClassName =
+    props.inCurrentMonth && dateCompare1 === dateCompare2
+      ? "day-card selected"
+      : props.inCurrentMonth
+      ? "day-card"
+      : "day-card inactive-month";
   return (
-    <td className={dayClassName}>
+    <td
+      className={dayClassName}
+      onClick={() => props.setCurrentDate(props.date)}
+    >
       <div className="day-num">
-        <p>{props.dayNum}</p>
+        <p>{props.date.getDate()}</p>
       </div>
       <div className="total-cals">Total : 3702 cals</div>
       <div className="meals">
-        <MonthlyMeal
-          color={props.inCurrentMonth ? "red" : "lightred"}
-          mealName="Breakfast"
-        />
-        <MonthlyMeal
-          color={props.inCurrentMonth ? "blue" : "lightblue"}
-          mealName="Lunch"
-        />
-        <MonthlyMeal
-          color={props.inCurrentMonth ? "green" : "lightgreen"}
-          mealName="Dinner"
-        />
+        <MonthlyMeal color={"red"} mealName="Breakfast" />
+        <MonthlyMeal color={"blue"} mealName="Lunch" />
+        <MonthlyMeal color={"green"} mealName="Dinner" />
       </div>
     </td>
   );
@@ -191,8 +219,11 @@ export const Week = (props) => {
   console.log();
   return daysInWeek.map((dayObj) => (
     <DayCard
-      dayNum={dayObj.date.getDate()}
+      key={dayObj.date}
+      date={dayObj.date}
+      currentDate={props.currentDate}
       inCurrentMonth={dayObj.inCurrentMonth}
+      setCurrentDate={props.setCurrentDate}
     />
   ));
 };

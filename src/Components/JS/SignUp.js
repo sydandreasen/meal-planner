@@ -1,17 +1,105 @@
+import React from "react";
 import application from "./Firebase.js";
+import { Form, Input, Button, Checkbox } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
-function SignUp(info) {
-  const handleSignUp = async (info) => {
+function SignUp(props) {
+  const handleSignUp = async (values) => {
     try {
       await application
         .auth()
-        .createUserWithEmailAndPassword(info.email, info.password);
+        .createUserWithEmailAndPassword(values.email, values.password);
       window.location.href = "/";
     } catch (error) {
       alert(error);
     }
   };
-  handleSignUp(info);
+
+  let hour = new Date().getHours();
+  let greeting = "Hello!"; // 12am-5am; 0-5 hours
+  if (hour >= 5 && hour < 12) {
+    // 5am-12pm
+    greeting = "Good Morning!";
+  } else if (hour >= 12 && hour < 17) {
+    // 12pm-5pm
+    greeting = "Good Afternoon!";
+  } else if (hour >= 17 && hour < 24) {
+    // 5pm-12am
+    greeting = "Good Evening!";
+  }
+
+  return (
+    <div className="userHandler">
+      <h1>{greeting}</h1>
+      <h2>Sign up to begin planning meals</h2>
+      <Form
+        name="login_form"
+        className="login-form"
+        initialValues={{ remember: true }}
+        onFinish={handleSignUp}
+      >
+        <Form.Item
+          name="email"
+          rules={[
+            { required: true, message: "Please enter your email address" },
+          ]}
+        >
+          <Input
+            prefix={<UserOutlined className="form-icon" />}
+            type="email"
+            placeholder="Email Address"
+          ></Input>
+        </Form.Item>
+        <Form.Item name="password">
+          <Input
+            prefix={<LockOutlined className="item-icon" />}
+            type="password"
+            placeholder="Password"
+          />
+        </Form.Item>
+        <Form.Item
+          name="confirmPassword"
+          dependencies={["password"]}
+          hasFeedback
+          rules={[
+            {
+              required: true,
+              message: "Please confirm your password!",
+            },
+            ({ getFieldValue }) => ({
+              validator(rule, value) {
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+
+                return Promise.reject(
+                  "The two passwords that you entered do not match!"
+                );
+              },
+            }),
+          ]}
+        >
+          <Input
+            prefix={<LockOutlined className="item-icon" />}
+            type="password"
+            placeholder="Confirm Password"
+          />
+        </Form.Item>
+
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="login-form-submit"
+          >
+            Sign Up
+          </Button>
+          <Link to="/login">Already registered? Log in</Link>
+        </Form.Item>
+      </Form>
+    </div>
+  );
 }
 
 export default SignUp;

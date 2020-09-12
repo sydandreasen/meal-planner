@@ -8,7 +8,8 @@ import {
 import { Spin } from "antd";
 import logo from "../../Images/logo.png";
 import "../SCSS/App.scss";
-import UserHandler from "./UserHandler.js";
+import Login from "./Login.js";
+import SignUp from "./SignUp.js";
 import Dashboard from "./Dashboard.js";
 import { AuthProvider } from "./Auth.js";
 import PrivateRoute from "./PrivateRoute.js";
@@ -52,10 +53,10 @@ function App() {
                 )}
               </Route>
               <Route exact path="/login">
-                <UserHandler exists={true} />
+                <Login />
               </Route>
               <Route exact path="/signup">
-                <UserHandler exists={false} />
+                <SignUp />
               </Route>
               <PrivateRoute exact path="/dashboard">
                 {!!currentUser ? <Dashboard /> : <Redirect to="/login" />}

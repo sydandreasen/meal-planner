@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Button } from "antd";
+import { Button, Select } from "antd";
 import "../SCSS/MealPlanning.scss";
 import { Monthly } from "./Monthly.js";
 import { Weekly } from "./Weekly.js";
 import { Daily } from "./Daily.js";
+
+const { Option } = Select;
 
 function MealPlanning(props) {
   const [view, setView] = useState("weekly");
@@ -13,22 +15,22 @@ function MealPlanning(props) {
       <h1>Welcome to your Meal Planning Dashboard</h1>
       <div className="button-wrapper">
         <div className="left-group">
-          <Button type="primary">Edit Meals</Button>
+          <Button type="primary">Add Food</Button>
           <Button type="primary">Export Plan</Button>
+        </div>
+        <div className="right-group">
           <Button type="primary" onClick={() => setCurrentDate(new Date())}>
             Jump to Today
           </Button>
-        </div>
-        <div className="right-group">
-          <Button type="primary" onClick={() => setView("monthly")}>
-            Monthly View
-          </Button>
-          <Button type="primary" onClick={() => setView("weekly")}>
-            Weekly View
-          </Button>
-          <Button type="primary" onClick={() => setView("daily")}>
-            Daily View
-          </Button>
+          <Select
+            defaultValue={"weekly"}
+            style={{ width: 140 }}
+            onChange={(value) => setView(value)}
+          >
+            <Option value={"monthly"}>Monthly View</Option>
+            <Option value={"weekly"}>Weekly View</Option>
+            <Option value={"daily"}>Daily View</Option>
+          </Select>
         </div>
       </div>
       <div className="calendar">
@@ -38,7 +40,10 @@ function MealPlanning(props) {
             setCurrentDate={(date) => setCurrentDate(date)}
           />
         ) : view === "weekly" ? (
-          <Weekly />
+          <Weekly
+            currentDate={currentDate}
+            setCurrentDate={(date) => setCurrentDate(date)}
+          />
         ) : view === "daily" ? (
           <Daily />
         ) : (
