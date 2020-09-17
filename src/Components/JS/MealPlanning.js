@@ -45,7 +45,10 @@ function MealPlanning(props) {
             setCurrentDate={(date) => setCurrentDate(date)}
           />
         ) : view === "daily" ? (
-          <Daily />
+          <Daily
+            currentDate={currentDate}
+            setCurrentDate={(date) => setCurrentDate(date)}
+          />
         ) : (
           ""
         )}

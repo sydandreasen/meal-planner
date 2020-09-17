@@ -1,0 +1,120 @@
+$blue: rgba(24, 144, 255, 0.3);
+$lightblue: rgba(24, 144, 255, 0.2);
+$green: rgba(59, 162, 81, 0.3);
+$lightgreen: rgba(59, 162, 81, 0.2);
+$red: rgba(248, 31, 7, 0.3);
+$lightred: rgba(248, 31, 7, 0.2);
+
+.daily {
+  width: 100%;
+
+  .header {
+    display: inline-block;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 0.5%;
+    margin-bottom: 1%;
+
+    .nav-icon {
+      font-size: 32px;
+      &:hover {
+        color: $blue;
+      }
+    }
+
+    h2 {
+      margin: 0% 8%;
+      font-size: 28px;
+      text-align: center;
+      display: inline;
+    }
+  }
+
+  .daily-card {
+    min-width: 125px;
+    width: 45%;
+    margin: 1% 2.5%;
+    border: solid 2px black;
+    padding: 0.15%;
+
+    .day-num {
+      float: left;
+      margin: 1%;
+
+      p {
+        border: black solid 1px;
+        border-radius: 50%;
+        width: 2vw;
+        font-size: calc(12px + 0.7vw);
+        font-weight: bold;
+        min-width: 20px;
+        min-height: 17px;
+      }
+    }
+
+    .total-cals {
+      display: inline;
+      font-weight: bold;
+      font-size: calc(12px + 0.7vw);
+    }
+
+    .meals {
+      width: 100%;
+      margin: 0.5%;
+      padding: 2%;
+
+      .meal {
+        margin: 1% 0;
+        padding: 0% 2%;
+        border-top: solid 1px black;
+
+        .ant-badge-status-text {
+          font-weight: bold;
+          font-size: calc(9px + 0.5vw);
+        }
+
+        .ant-table-thead .ant-table-cell {
+          font-weight: bold;
+          font-size: calc(8px + 0.5vw);
+          text-align: center;
+        }
+
+        .ant-table-tbody .ant-table-cell {
+          font-size: calc(8px + 0.5vw);
+          text-align: center;
+
+          .anticon-expand-alt {
+            border-radius: 50%;
+            transition: background-color 0.2s ease-in;
+            transition: box-shadow 0.2s ease-in;
+
+            &:hover {
+              background: rgb(215, 215, 215);
+              box-shadow: 0px 0px 6px 6px rgb(215, 215, 215);
+            }
+          }
+
+          .anticon-delete {
+            border-radius: 50%;
+            transition: background-color 0.2s ease-in;
+            transition: box-shadow 0.2s ease-in;
+
+            &:hover {
+              background: rgb(215, 215, 215);
+              box-shadow: 0px 0px 6px 6px rgb(215, 215, 215);
+            }
+          }
+        }
+        .ant-input-number {
+          width: 20%;
+          height: 8%;
+          margin: auto;
+        }
+        .anticon-check-square {
+          margin: auto;
+          margin-left: 5%;
+        }
+      }
+    }
+  }
+}
