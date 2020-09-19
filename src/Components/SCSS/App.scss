@@ -28,16 +28,20 @@
   }
 
   footer {
-    margin-top: 50px;
-    position: absolute;
-    padding: 2%;
-    height: 2%;
-    width: 100%;
+    margin-top: 35px;
 
-    img {
-      margin-right: 0.5%;
-      width: 4%;
-      max-width: 50px;
+    .mine {
+      margin-top: 15px;
+      position: absolute;
+      padding: 2%;
+      height: 2%;
+      width: 100%;
+
+      img {
+        margin-right: 0.5%;
+        width: 4%;
+        max-width: 50px;
+      }
     }
   }
 }

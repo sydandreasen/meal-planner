@@ -70,7 +70,10 @@ function App() {
       )}
 
       <footer>
-        <img src={logo} alt={""} />A Student-Developed Application. 2020.
+        <div className="mine">
+          <img src={logo} alt={""} />A Student-Developed Application. 2020.
+        </div>
+        <div id="edamam-badge" data-color="transparent"></div>
       </footer>
     </div>
   );

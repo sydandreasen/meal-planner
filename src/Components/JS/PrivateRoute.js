@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Route, Redirect } from "react-router-dom";
+import React from "react";
+import { Route } from "react-router-dom";
 // import { AuthContext } from "./Auth.js";
 
 // component is component to be rendered if user is authenticated

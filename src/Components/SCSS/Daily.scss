@@ -73,46 +73,50 @@ $lightred: rgba(248, 31, 7, 0.2);
           font-size: calc(9px + 0.5vw);
         }
 
-        .ant-table-thead .ant-table-cell {
-          font-weight: bold;
-          font-size: calc(8px + 0.5vw);
-          text-align: center;
-        }
+        .ant-table-wrapper {
+          margin-right: 1%;
 
-        .ant-table-tbody .ant-table-cell {
-          font-size: calc(8px + 0.5vw);
-          text-align: center;
-
-          .anticon-expand-alt {
-            border-radius: 50%;
-            transition: background-color 0.2s ease-in;
-            transition: box-shadow 0.2s ease-in;
-
-            &:hover {
-              background: rgb(215, 215, 215);
-              box-shadow: 0px 0px 6px 6px rgb(215, 215, 215);
-            }
+          .ant-table-thead .ant-table-cell {
+            font-weight: bold;
+            font-size: calc(8px + 0.5vw);
+            text-align: center;
           }
 
-          .anticon-delete {
-            border-radius: 50%;
-            transition: background-color 0.2s ease-in;
-            transition: box-shadow 0.2s ease-in;
+          .ant-table-tbody .ant-table-cell {
+            font-size: calc(8px + 0.5vw);
+            text-align: center;
 
-            &:hover {
-              background: rgb(215, 215, 215);
-              box-shadow: 0px 0px 6px 6px rgb(215, 215, 215);
+            .anticon-expand-alt {
+              border-radius: 50%;
+              transition: background-color 0.2s ease-in;
+              transition: box-shadow 0.2s ease-in;
+
+              &:hover {
+                background: rgb(215, 215, 215);
+                box-shadow: 0px 0px 6px 6px rgb(215, 215, 215);
+              }
+            }
+
+            .anticon-delete {
+              border-radius: 50%;
+              transition: background-color 0.2s ease-in;
+              transition: box-shadow 0.2s ease-in;
+
+              &:hover {
+                background: rgb(215, 215, 215);
+                box-shadow: 0px 0px 6px 6px rgb(215, 215, 215);
+              }
             }
           }
-        }
-        .ant-input-number {
-          width: 20%;
-          height: 8%;
-          margin: auto;
-        }
-        .anticon-check-square {
-          margin: auto;
-          margin-left: 5%;
+          .ant-input-number {
+            width: 20%;
+            height: 8%;
+            margin: auto;
+          }
+          .anticon-check-square {
+            margin: auto;
+            margin-left: 5%;
+          }
         }
       }
     }

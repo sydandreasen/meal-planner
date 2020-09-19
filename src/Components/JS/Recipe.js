@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 import { Card, Descriptions, Table, Modal } from "antd";
-import {
-  EditOutlined,
-  EllipsisOutlined,
-  CloseCircleOutlined,
-} from "@ant-design/icons";
+import { EllipsisOutlined, CloseCircleOutlined } from "@ant-design/icons";
 const { Meta } = Card;
 
 export const RecipeDetail = () => {
   return (
     <div className="details">
-      <Descriptions title="" bordered column={1} size={"small"}>
+      <Descriptions>
         <Descriptions.Item label="Category">Breads</Descriptions.Item>
         <Descriptions.Item label="Yields">1 loaf</Descriptions.Item>
         <Descriptions.Item label="Prep Time">15 min</Descriptions.Item>
@@ -82,7 +78,7 @@ export const Recipe = (props) => {
       closeIcon={<CloseCircleOutlined />}
       title={"Example Banana Bread"}
     >
-      <img alt="recipe cover image" src={props.img} />
+      <img alt="recipe cover" src={props.img} />
       <RecipeDetail />
       <RecipeIngredients />
       <RecipeInstructions />
@@ -104,7 +100,7 @@ export const RecipeCard = (props) => {
         onClick={() => {
           setShowRecipe(true);
         }}
-        cover={<img alt="recipe cover image" src={cardImgSrc} />}
+        cover={<img alt="recipe cover" src={cardImgSrc} />}
         actions={[
           //   <EditOutlined key="edit" />,
           <EllipsisOutlined key="ellipsis" />,
