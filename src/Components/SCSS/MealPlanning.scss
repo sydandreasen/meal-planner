@@ -64,4 +64,8 @@ $blue: #1890ff;
   .ant-btn {
     margin: 2%;
   }
+  .food-info {
+    max-height: 300px;
+    overflow-y: auto;
+  }
 }

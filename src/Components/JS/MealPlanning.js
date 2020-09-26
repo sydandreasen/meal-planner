@@ -69,26 +69,77 @@ function MealPlanning(props) {
 
 export const Search = (props) => {
   const [searchStr, setSearchStr] = useState("");
-  const [foodInfo, setFoodInfo] = useState(null);
-  const getFood = (searchStr) => {
+  const [showFoodInfo, setShowFoodInfo] = useState(false);
+  const [foodInfo, setFoodInfo] = useState([]);
+  const [foodName, setFoodName] = useState("");
+  const getFood = async (searchStr) => {
     if (searchStr) {
+      // get the URL encorded for the parser request
       const foodStr = searchStr.replace(" ", "%20");
       const parserReq = `https://api.edamam.com/api/food-database/v2/parser?ingr=${foodStr}&app_id=${process.env.REACT_APP_EDAMAM_APP_ID}&app_key=${process.env.REACT_APP_EDAMAM_APP_KEY}`;
-      axios
+
+      // get info from parser request to give to nutrients request
+      let foodId = "";
+      let servURI = "";
+      let quantity = 1;
+
+      // parser request
+      await axios
         .get(parserReq)
         .then((response) => {
-          setFoodInfo(response.data);
-          console.log(JSON.stringify(response.data.parsed[0].food.nutrients));
+          setFoodName(response.data.text);
+          foodId = response.data.hints[0].food.foodId;
+          // find which measure is for serving
+          response.data.hints[0].measures.forEach((measure) => {
+            if (measure.label === "Serving") {
+              servURI = measure.uri;
+            }
+          });
         })
-        .catch((error) => console.error(error));
+        .catch(() => console.error("Parser GET request failed."));
+
+      // nutrients request
+      await axios
+        .post(
+          `https://api.edamam.com/api/food-database/v2/nutrients?app_id=${process.env.REACT_APP_EDAMAM_APP_ID}&app_key=${process.env.REACT_APP_EDAMAM_APP_KEY}`,
+          {
+            ingredients: [
+              {
+                quantity: quantity,
+                measureURI: servURI,
+                foodId: foodId,
+              },
+            ],
+          }
+        )
+        .then((response) => {
+          let tempInfo = [];
+          tempInfo[0] = {
+            label: "Calories",
+            quantity: response.data.calories,
+            unit: "cals",
+          };
+          let nutrientNames = Object.getOwnPropertyNames(
+            response.data.totalNutrients
+          );
+          nutrientNames.forEach((nutrient) => {
+            tempInfo.push({
+              label: response.data.totalNutrients[nutrient].label,
+              quantity: response.data.totalNutrients[nutrient].quantity,
+              unit: response.data.totalNutrients[nutrient].unit,
+            });
+          });
+          setFoodInfo(tempInfo);
+          setShowFoodInfo(true);
+        })
+        .catch(() => console.error("Nutrients POST request failed."));
     }
   };
-  console.log(foodInfo);
 
   return (
     <Modal
       className="search"
-      footer={[<div></div>]}
+      footer={<div></div>}
       visible={props.visible}
       onCancel={() => props.setShowSearch(false)}
       centered={true}
@@ -104,35 +155,26 @@ export const Search = (props) => {
         Search
       </Button>
 
-      {foodInfo &&
-      foodInfo.parsed &&
-      foodInfo.parsed[0].food &&
-      foodInfo.parsed[0].food.nutrients ? (
-        <FoodInfo
-          food={searchStr}
-          nutrients={foodInfo.parsed[0].food.nutrients}
-        />
-      ) : (
-        ""
-      )}
+      {showFoodInfo ? <FoodInfo food={foodName} nutrients={foodInfo} /> : ""}
     </Modal>
   );
 };
 
 export const FoodInfo = (props) => {
-  const cals = props.nutrients.ENERC_KCAL;
-  const prot = props.nutrients.PROCNT;
-  const carbs = props.nutrients.CHOCDF;
-  const fat = props.nutrients.FAT;
-  const fiber = props.nutrients.FIBTG;
   return (
-    <Descriptions title={props.food} bordered column={1} size={"small"}>
-      <Descriptions.Item label="Calories">{cals}</Descriptions.Item>
-      <Descriptions.Item label="Protein (g)">{prot}</Descriptions.Item>
-      <Descriptions.Item label="Cabohydrates (g)">{carbs}</Descriptions.Item>
-      <Descriptions.Item label="Fat (g)">{fat}</Descriptions.Item>
-      <Descriptions.Item label="Fiber (g)">{fiber}</Descriptions.Item>
-    </Descriptions>
+    <div>
+      <h3>{`${props.food} (1 Serving)`}</h3>
+      <Descriptions bordered column={1} size={"small"} className={"food-info"}>
+        {props.nutrients.map((nutrient, index) => (
+          <Descriptions.Item
+            key={index}
+            label={`${nutrient.label} (${nutrient.unit})`}
+          >
+            {nutrient.quantity.toFixed(2)}
+          </Descriptions.Item>
+        ))}
+      </Descriptions>
+    </div>
   );
 };
 
