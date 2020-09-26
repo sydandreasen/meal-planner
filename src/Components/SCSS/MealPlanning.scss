@@ -64,8 +64,33 @@ $blue: #1890ff;
   .ant-btn {
     margin: 2%;
   }
-  .food-info {
-    max-height: 300px;
-    overflow-y: auto;
+
+  .food-wrapper {
+    width: 100%;
+    margin-top: 3%;
+
+    .head {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .food-info {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .add-food {
+      text-align: center;
+
+      .ant-picker {
+        width: 60%;
+        margin: 2%;
+      }
+      .ant-select {
+        width: 60%;
+        margin: 2%;
+        text-align: left;
+      }
+    }
   }
 }

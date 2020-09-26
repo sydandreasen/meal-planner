@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Input, Button, Select, Modal, Descriptions } from "antd";
+import { Input, Button, Select, Modal, Descriptions, DatePicker } from "antd";
 import "../SCSS/MealPlanning.scss";
 import { Monthly } from "./Monthly.js";
 import { Weekly } from "./Weekly.js";
 import { Daily } from "./Daily.js";
-import { CloseCircleOutlined } from "@ant-design/icons";
+import {
+  CloseCircleOutlined,
+  PlusCircleOutlined,
+  MinusCircleOutlined,
+} from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -161,19 +165,53 @@ export const Search = (props) => {
 };
 
 export const FoodInfo = (props) => {
+  const [showNutrients, setShowNutrients] = useState(true);
+
   return (
-    <div>
-      <h3>{`${props.food} (1 Serving)`}</h3>
-      <Descriptions bordered column={1} size={"small"} className={"food-info"}>
-        {props.nutrients.map((nutrient, index) => (
-          <Descriptions.Item
-            key={index}
-            label={`${nutrient.label} (${nutrient.unit})`}
-          >
-            {nutrient.quantity.toFixed(2)}
-          </Descriptions.Item>
-        ))}
-      </Descriptions>
+    <div className="food-wrapper">
+      <div className="head">
+        <h3>{`${props.food} (1 Serving)`}</h3>
+        <Button
+          type="primary"
+          icon={
+            showNutrients ? <PlusCircleOutlined /> : <MinusCircleOutlined />
+          }
+          onClick={() => setShowNutrients(!showNutrients)}
+        >
+          Add to Plan
+        </Button>
+      </div>
+      {showNutrients ? (
+        <Descriptions
+          bordered
+          column={1}
+          size={"small"}
+          className={"food-info"}
+        >
+          {props.nutrients.map((nutrient, index) => (
+            <Descriptions.Item
+              key={index}
+              label={`${nutrient.label} (${nutrient.unit})`}
+            >
+              {nutrient.quantity.toFixed(2)}
+            </Descriptions.Item>
+          ))}
+        </Descriptions>
+      ) : (
+        <div className="add-food">
+          <DatePicker
+            placeholder="Select a date to plan this food"
+            onChange={(date, dateString) =>
+              console.log("date selected:", dateString)
+            }
+          />
+          <Select placeholder="Select a meal to plan this food">
+            <Option value="breakfast">Breakfast</Option>
+            <Option value="lunch">Lunch</Option>
+            <Option value="dinner">Dinner</Option>
+          </Select>
+        </div>
+      )}
     </div>
   );
 };
