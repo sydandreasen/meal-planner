@@ -59,7 +59,11 @@ function App() {
                 <SignUp />
               </Route>
               <PrivateRoute exact path="/dashboard">
-                {!!currentUser ? <Dashboard /> : <Redirect to="/login" />}
+                {!!currentUser ? (
+                  <Dashboard user={currentUser} />
+                ) : (
+                  <Redirect to="/login" />
+                )}
               </PrivateRoute>
               <Route exact path="/forgot-password">
                 <ForgotPassword />

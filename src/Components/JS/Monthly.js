@@ -6,6 +6,7 @@ import {
   DoubleRightOutlined,
   DoubleLeftOutlined,
 } from "@ant-design/icons";
+import { dayNutrients, mealNutrients, foodNutrients } from "./Commons.js";
 import "../SCSS/Monthly.scss";
 
 export const Monthly = (props) => {
@@ -171,7 +172,7 @@ export const MonthlyMeal = (props) => {
       <Descriptions.Item
         label={<Badge color={props.color} text={props.mealName} />}
       >
-        1234 cals
+        {mealNutrients.cals ? mealNutrients.cals : 0} cals
       </Descriptions.Item>
     </Descriptions>
   );
@@ -194,7 +195,9 @@ export const DayCard = (props) => {
       <div className="day-num">
         <p>{props.date.getDate()}</p>
       </div>
-      <div className="total-cals">Total : 3702 cals</div>
+      <div className="total-cals">
+        Total : {dayNutrients.cals ? dayNutrients.cals : 0} cals
+      </div>
       <div className="meals">
         <MonthlyMeal color={"red"} mealName="Breakfast" />
         <MonthlyMeal color={"blue"} mealName="Lunch" />

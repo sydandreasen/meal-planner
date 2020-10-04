@@ -14,6 +14,7 @@ import {
   InputNumber,
   Popconfirm,
 } from "antd";
+import { dayNutrients, mealNutrients, foodNutrients } from "./Commons.js";
 import "../SCSS/Daily.scss";
 
 export const DailyMeal = (props) => {
@@ -65,15 +66,44 @@ export const DailyMeal = (props) => {
   ];
 
   const foods = [
-    { key: "1", food: "Food 1", quantity: "4", calories: 100, actions: "" },
-    { key: "2", food: "Food 2", quantity: "3", calories: 300, actions: "" },
-    { key: "3", food: "Food 3", quantity: "2", calories: 550, actions: "" },
-    { key: "4", food: "Food 4", quantity: "1", calories: 284, actions: "" },
+    {
+      key: "1",
+      food: "Food 1",
+      quantity: foodNutrients.quantity ? foodNutrients.quantity : 0,
+      calories: foodNutrients.cals ? foodNutrients.cals : 0,
+      actions: "",
+    },
+    {
+      key: "2",
+      food: "Food 2",
+      quantity: foodNutrients.quantity ? foodNutrients.quantity : 0,
+      calories: foodNutrients.cals ? foodNutrients.cals : 0,
+      actions: "",
+    },
+    {
+      key: "3",
+      food: "Food 3",
+      quantity: foodNutrients.quantity ? foodNutrients.quantity : 0,
+      calories: foodNutrients.cals ? foodNutrients.cals : 0,
+      actions: "",
+    },
+    {
+      key: "4",
+      food: "Food 4",
+      quantity: foodNutrients.quantity ? foodNutrients.quantity : 0,
+      calories: foodNutrients.cals ? foodNutrients.cals : 0,
+      actions: "",
+    },
   ];
 
   return (
     <tr className="meal">
-      <Badge color={props.color} text={`${props.mealName} : 1234 cals`} />
+      <Badge
+        color={props.color}
+        text={`${props.mealName} : ${
+          mealNutrients.cals ? mealNutrients.cals : 0
+        } cals`}
+      />
 
       <Table
         size={"small"}
@@ -91,7 +121,9 @@ export const DailyCard = (props) => {
       <div className="day-num">
         <p>{props.date.getDate()}</p>{" "}
       </div>
-      <div className="total-cals">3702 cals</div>
+      <div className="total-cals">
+        {dayNutrients.cals ? dayNutrients.cals : 0} cals
+      </div>
       <table className="meals">
         <tbody>
           <DailyMeal color={"red"} mealName={"Breakfast"} />

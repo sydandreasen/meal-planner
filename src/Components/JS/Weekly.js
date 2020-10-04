@@ -1,6 +1,7 @@
 import React from "react";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { Descriptions, Tooltip, Badge } from "antd";
+import { dayNutrients, mealNutrients, foodNutrients } from "./Commons.js";
 import "../SCSS/Weekly.scss";
 
 export const Weekly = (props) => {
@@ -125,7 +126,9 @@ export const WeekdayCard = (props) => {
       <div className="day-num">
         <p>{props.date.getDate()}</p>
       </div>
-      <div className="total-cals">3702 cals</div>
+      <div className="total-cals">
+        {dayNutrients.cals ? dayNutrients.cals : 0} cals
+      </div>
       <div className="meals">
         <WeeklyMeal color={"red"} mealName={"Breakfast"} />
         <WeeklyMeal color={"blue"} mealName={"Lunch"} />
@@ -139,15 +142,22 @@ export const WeeklyMeal = (props) => {
   return (
     <Descriptions
       title={
-        <Badge color={props.color} text={`${props.mealName} : 1234 cals`} />
+        <Badge
+          color={props.color}
+          text={`${props.mealName} : ${
+            mealNutrients.cals ? mealNutrients.cals : 0
+          } cals`}
+        />
       }
       column={1}
       size={"small"}
       className={"meal"}
     >
-      <Descriptions.Item label={"Food 1"}>500 cals</Descriptions.Item>
-      <Descriptions.Item label={"Food 2"}>410 cals</Descriptions.Item>
-      <Descriptions.Item label={"Food 3"}>324</Descriptions.Item>
+      {mealNutrients.cals ? (
+        <Descriptions.Item label={""}>{foodNutrients.cals}</Descriptions.Item>
+      ) : (
+        <Descriptions.Item label={"No Foods"}>Add Some!</Descriptions.Item>
+      )}
     </Descriptions>
   );
 };

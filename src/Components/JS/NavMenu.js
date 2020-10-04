@@ -7,6 +7,7 @@ import {
   ContainerOutlined,
   ProfileOutlined,
   PoweroffOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import "../SCSS/NavMenu.scss";
 import application from "./Firebase";
@@ -50,11 +51,21 @@ function NavMenu(props) {
           onClick={() => props.page("groceries")}
         >
           Groceries
-        </Menu.Item>
+        </Menu.Item>{" "}
         <Menu.Item
           key="4"
+          icon={<SettingOutlined />}
+          onClick={() => props.page("settings")}
+        >
+          Settings
+        </Menu.Item>
+        <Menu.Item
+          key="5"
           icon={<PoweroffOutlined />}
-          onClick={() => application.auth().signOut()}
+          onClick={() => {
+            application.auth().signOut();
+            localStorage.clear();
+          }}
         >
           Sign Out
         </Menu.Item>

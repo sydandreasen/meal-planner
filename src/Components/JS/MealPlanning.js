@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Input, Button, Select, Modal, Descriptions, DatePicker } from "antd";
+import {
+  Input,
+  InputNumber,
+  Button,
+  Select,
+  Modal,
+  Descriptions,
+  DatePicker,
+} from "antd";
 import "../SCSS/MealPlanning.scss";
 import { Monthly } from "./Monthly.js";
 import { Weekly } from "./Weekly.js";
@@ -14,7 +22,7 @@ import {
 const { Option } = Select;
 
 function MealPlanning(props) {
-  const [view, setView] = useState("weekly");
+  const [view, setView] = useState(props.defaultView);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showSearch, setShowSearch] = useState(false);
 
@@ -93,6 +101,7 @@ export const Search = (props) => {
         .then((response) => {
           setFoodName(response.data.text);
           foodId = response.data.hints[0].food.foodId;
+          console.log(foodId);
           // find which measure is for serving
           response.data.hints[0].measures.forEach((measure) => {
             if (measure.label === "Serving") {
@@ -210,6 +219,14 @@ export const FoodInfo = (props) => {
             <Option value="lunch">Lunch</Option>
             <Option value="dinner">Dinner</Option>
           </Select>
+          <br />
+          <p>
+            Quantity :
+            <InputNumber style={{ margin: "10px" }} defaultValue={1} />
+          </p>
+
+          <br />
+          <Button icon={<PlusCircleOutlined />}>Add it!</Button>
         </div>
       )}
     </div>

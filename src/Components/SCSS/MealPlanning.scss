@@ -80,16 +80,43 @@ $blue: #1890ff;
     }
 
     .add-food {
-      text-align: center;
+      display: inline;
 
       .ant-picker {
         width: 60%;
         margin: 2%;
+        color: black;
+
+        input {
+          ::placeholder {
+            color: black;
+            opacity: 1 !important; // NOT WORKING
+          }
+        }
       }
       .ant-select {
         width: 60%;
         margin: 2%;
         text-align: left;
+
+        .ant-select-selection-placeholder {
+          color: black;
+          opacity: 1 !important;
+        }
+
+        .ant-select-arrow .anticon {
+          color: rgba(0, 0, 0, 1) !important; // NOT WORKING
+          opacity: 1 !important;
+        }
+      }
+
+      p {
+        margin: 2%;
+        margin-bottom: 0;
+      }
+
+      .ant-btn {
+        margin-top: 0;
       }
     }
   }
