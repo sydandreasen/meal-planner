@@ -30,44 +30,7 @@ function DbHandler(user) {
 
   updateData(userPath, { updated: new Date().toString() });
 
-  // listen to events at path
-  // ( or the .once method will trigger once and then stop listening )
-  //   userPath.on("value", (snapshot) => console.log(snapshot.val()));
-
   // build up dummy data
-  // first, easy account settings
-  //   const settingsPathStr = "users/" + user.uid + "/settings";
-  //   let viewSettings = { defaultPage: "planning", defaultView: "weekly" };
-  //   updateData(db.ref(settingsPathStr + "/view"), viewSettings);
-  //   let mealSettings = [
-  //     { name: "Breakfast", key: 1 },
-  //     { name: "Lunch", key: 2 },
-  //     { name: "Dinner", key: 3 },
-  //   ];
-  //   writeData(db.ref(settingsPathStr + "/meals"), mealSettings);
-  //   let goalSettings = {
-  //     calories: {
-  //       amount: 1330,
-  //       unit: "calories",
-  //     },
-  //     carbohydrates: {
-  //       amount: 117,
-  //       unit: "g",
-  //     },
-  //     fat: {
-  //       amount: 53,
-  //       unit: "g",
-  //     },
-  //     sugar: {
-  //       amount: 50,
-  //       unit: "g",
-  //     },
-  //     protein: {
-  //       amount: 101,
-  //       unit: "g",
-  //     },
-  //   };
-  //   updateData(db.ref(settingsPathStr + "/goals"), goalSettings);
 
   // all meal planning information
   const plansPathStr = "users/" + user.uid + "/plans";

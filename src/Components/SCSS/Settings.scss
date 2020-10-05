@@ -1,13 +1,47 @@
+$blue: rgba(24, 144, 255, 0.3);
+$lightblue: rgba(24, 144, 255, 0.2);
+$green: rgba(59, 162, 81, 0.3);
+$lightgreen: rgba(59, 162, 81, 0.2);
+$red: rgba(248, 31, 7, 0.3);
+$lightred: rgba(248, 31, 7, 0.2);
+
 .settings {
-  margin: 3%;
+  margin: auto;
+  width: 80%;
+
+  h2 {
+    border-top: black solid 1px;
+  }
 
   .setting {
     display: inline-flex;
+    flex-wrap: wrap;
+    margin: auto;
+    justify-content: space-around;
+
+    .goal {
+      display: inline-flex;
+      flex-wrap: wrap;
+    }
+
+    p {
+      margin: auto 0;
+    }
   }
-  //   h3 {
-  //     text-align: left;
-  //   }
-  //   h4 {
-  //     text-align: left;
-  //   }
+
+  .meal-list {
+    width: 33%;
+    margin: auto;
+    border: 1px solid black;
+    padding: 1%;
+    box-shadow: 3px 3px black;
+
+    .meal {
+      width: 100%;
+      margin: 1% auto;
+      border: 1px solid black;
+      box-shadow: 1px 1px black;
+      display: inline-flex;
+    }
+  }
 }
