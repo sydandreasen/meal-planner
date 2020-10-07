@@ -13,19 +13,20 @@ function DbHandler(user) {
       // note this will overwrite all information at the designated path, even at child paths
       // to update without overwriting, use .update
       ...info,
-      (error) =>
-        error
-          ? console.error("Write failed : ", error)
-          : console.log("Write Successful")
+      (error) => {
+        if (error) {
+          console.error("Write failed : ", error);
+        }
+      }
     );
   };
 
   const updateData = (path, ...info) => {
-    path.update(...info, (error) =>
-      error
-        ? console.error("Update failed : ", error)
-        : console.log("Update Successful")
-    );
+    path.update(...info, (error) => {
+      if (error) {
+        console.error("Update failed : ", error);
+      }
+    });
   };
 
   updateData(userPath, { updated: new Date().toString() });

@@ -16,9 +16,13 @@ function Dashboard(props) {
 
   useEffect(() => {
     db.ref(viewPathStr).once("value", (snap) => {
-      console.log(snap.val());
       setDefaultView(snap.val().defaultView);
-      if (page === "") {
+      if (
+        localStorage.getItem("page") &&
+        localStorage.getItem("page").length > 0
+      ) {
+        setPage(localStorage.getItem("page"));
+      } else if (page === "") {
         setPage(snap.val().defaultPage);
       }
     });
@@ -27,7 +31,12 @@ function Dashboard(props) {
   DbHandler(props.user);
   return (
     <div>
-      <NavMenu page={(showPage) => setPage(showPage)} />
+      <NavMenu
+        page={(showPage) => {
+          setPage(showPage);
+          localStorage.setItem("page", showPage);
+        }}
+      />
       {page === "meal planning" ? (
         <MealPlanning defaultView={defaultView} />
       ) : page === "recipes" ? (

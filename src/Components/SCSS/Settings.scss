@@ -30,7 +30,7 @@ $lightred: rgba(248, 31, 7, 0.2);
   }
 
   .meal-list {
-    width: 33%;
+    width: 20%;
     margin: auto;
     border: 1px solid black;
     padding: 1%;
@@ -42,6 +42,30 @@ $lightred: rgba(248, 31, 7, 0.2);
       border: 1px solid black;
       box-shadow: 1px 1px black;
       display: inline-flex;
+      justify-content: center;
+
+      .ant-badge-status-dot {
+        margin: auto 1%;
+        width: 0.85vw;
+        height: 0.85vw;
+        cursor: pointer;
+      }
+
+      p {
+        margin: auto 1%;
+      }
     }
+  }
+}
+
+.ant-popover-inner-content {
+  .ant-btn {
+    border: none;
+    border-radius: 50%;
+  }
+
+  .ant-badge-status-dot {
+    width: 0.85vw;
+    height: 0.85vw;
   }
 }

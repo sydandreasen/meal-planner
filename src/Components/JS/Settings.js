@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Select, InputNumber, Badge } from "antd";
-import Reorder, {
-  reorder,
-  reorderImmutable,
-  reorderFromTo,
-  reorderFromToImmutable,
-} from "react-reorder";
+import { Select, InputNumber, Badge, Popover, Tooltip, Button } from "antd";
+import Reorder, { reorder } from "react-reorder";
 import * as firebase from "firebase/app";
 import "../SCSS/Settings.scss";
 require("firebase/database");
@@ -15,9 +10,27 @@ const { Option } = Select;
 function Settings(props) {
   const settingsPathStr = "users/" + props.uid + "/settings";
   const [DbSettings, setDbSettings] = useState({});
+  const [meals, setMeals] = useState([]);
+  // options for meal colors
+  const colors = [
+    "pink",
+    "red",
+    "yellow",
+    "orange",
+    "cyan",
+    "green",
+    "blue",
+    "purple",
+    "geekblue",
+    "magenta",
+    "volcano",
+    "gold",
+    "lime",
+  ];
   useEffect(() => {
     db.ref(settingsPathStr).on("value", (snapshot) => {
       setDbSettings(snapshot.val());
+      setMeals(snapshot.val().meals);
     });
   }, [props.uid]);
 
@@ -144,22 +157,54 @@ function Settings(props) {
       <br />
       <h2>Meal Information</h2>
       <p>
-        Edit the number, order, and names of your daily meals (that includes
-        snacks!)
+        Edit the number, order, color, and names of your daily meals (that
+        includes snacks!)
       </p>
       {/* have some buttons for actions and a table with the number of meals based on DB settings */}
+      <Tooltip></Tooltip>
       <Reorder
         reorderId="meal-list"
         itemKey="name"
         lock="horizontal"
-        holdTime={100}
+        holdTime={300}
         className="meal-list"
         // TODO : add ability to pick color for meal, fix styling around badge and meal name
-        // TODO : callBack // overwrite DB with names and keys of meals
+        onReorder={(event, previousIndex, nextIndex, fromId, told) => {
+          let tempMeals = meals.slice();
+          tempMeals = reorder(tempMeals, previousIndex, nextIndex);
+          tempMeals.forEach((meal, index) => (meal.key = index + 1));
+          db.ref(settingsPathStr + "/meals")
+            .set(tempMeals)
+            .catch((error) => alert(error));
+          setMeals(tempMeals);
+        }}
       >
-        {DbSettings.meals.map((meal) => (
+        {meals.map((meal) => (
           <div className="meal" key={meal.key}>
-            <Badge color={meal.color} />
+            <Popover
+              title="Customize your meal color"
+              trigger="click"
+              content={
+                <div>
+                  {colors.map((color) => (
+                    <Badge
+                      color={color}
+                      key={color}
+                      onClick={(event) => console.log(event.target.style)} // TODO : not working as expected
+                    />
+                  ))}
+                </div>
+              }
+            >
+              <Tooltip
+                placement="rightBottom"
+                title="Click to Customize Color"
+                mouseLeaveDelay={0}
+              >
+                <Badge color={meal.color} />{" "}
+              </Tooltip>
+            </Popover>
+
             <p>{meal.name}</p>
           </div>
         ))}
