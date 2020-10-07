@@ -14,6 +14,7 @@ function Dashboard(props) {
   const [page, setPage] = useState("");
   const viewPathStr = "users/" + props.user.uid + "/settings/view";
 
+  // TODO also store view in localStorage so that view doesn't reset to the account default on a refresh
   useEffect(() => {
     db.ref(viewPathStr).once("value", (snap) => {
       setDefaultView(snap.val().defaultView);
@@ -26,7 +27,7 @@ function Dashboard(props) {
         setPage(snap.val().defaultPage);
       }
     });
-  }, [props.user.uid]);
+  });
 
   DbHandler(props.user);
   return (

@@ -6,7 +6,7 @@ import {
   DoubleRightOutlined,
   DoubleLeftOutlined,
 } from "@ant-design/icons";
-import { dayNutrients, mealNutrients, foodNutrients } from "./Commons.js";
+import { dayNutrients, mealNutrients } from "./Commons.js";
 import "../SCSS/Monthly.scss";
 
 export const Monthly = (props) => {
