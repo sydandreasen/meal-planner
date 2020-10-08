@@ -6,14 +6,7 @@ import {
   CheckSquareOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import {
-  Tooltip,
-  Badge,
-  Table,
-  // Modal,
-  InputNumber,
-  Popconfirm,
-} from "antd";
+import { Tooltip, Badge, Table, InputNumber, Popconfirm } from "antd";
 import { dayNutrients, mealNutrients, foodNutrients } from "./Commons.js";
 import "../SCSS/Daily.scss";
 
@@ -98,19 +91,21 @@ export const DailyMeal = (props) => {
 
   return (
     <tr className="meal">
-      <Badge
-        color={props.color}
-        text={`${props.mealName} : ${
-          mealNutrients.cals ? mealNutrients.cals : 0
-        } cals`}
-      />
+      <td>
+        <Badge
+          color={props.color}
+          text={`${props.mealName} : ${
+            mealNutrients.cals ? mealNutrients.cals : 0
+          } cals`}
+        />
 
-      <Table
-        size={"small"}
-        pagination={false}
-        columns={columns}
-        dataSource={foods}
-      />
+        <Table
+          size={"small"}
+          pagination={false}
+          columns={columns}
+          dataSource={foods}
+        />
+      </td>
     </tr>
   );
 };
@@ -126,9 +121,9 @@ export const DailyCard = (props) => {
       </div>
       <table className="meals">
         <tbody>
-          <DailyMeal color={"red"} mealName={"Breakfast"} />
-          <DailyMeal color={"blue"} mealName={"Lunch"} />
-          <DailyMeal color={"green"} mealName={"Dinner"} />
+          {props.mealSettings.map((meal) => (
+            <DailyMeal color={meal.color} mealName={meal.name} key={meal.key} />
+          ))}
         </tbody>
       </table>
     </div>
@@ -195,7 +190,7 @@ export const Daily = (props) => {
           />
         </Tooltip>
       </div>
-      <DailyCard date={currentDate} />
+      <DailyCard date={currentDate} mealSettings={props.mealSettings} />
     </div>
   );
 };

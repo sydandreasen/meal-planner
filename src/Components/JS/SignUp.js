@@ -1,37 +1,27 @@
 import React from "react";
-import application from "./Firebase.js";
 import { Form, Input, Button } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import * as firebase from "firebase/app";
-require("firebase/database");
-const db = firebase.database();
+import { writeData } from "./DbHandler.js";
+import base from "./Firebase.js";
 
 function SignUp(props) {
   const handleSignUp = async (values) => {
     try {
-      await application
+      await base
         .auth()
         .createUserWithEmailAndPassword(values.email, values.password);
-      let user = firebase.auth().currentUser;
+      let user = base.auth().currentUser;
       const settingsPathStr = "users/" + user.uid + "/settings";
       let viewSettings = { defaultPage: "planning", defaultView: "weekly" };
-      db.ref(settingsPathStr + "/view").set(viewSettings, (error) =>
-        error
-          ? console.error("Setting view settings failed : ", error)
-          : console.log("Writing of View Settings Successful")
-      );
+      writeData(settingsPathStr + "/view", viewSettings);
 
       let mealSettings = [
         { name: "Breakfast", key: 1, color: "red" },
         { name: "Lunch", key: 2, color: "blue" },
         { name: "Dinner", key: 3, color: "green" },
       ];
-      db.ref(settingsPathStr + "/meals").set(mealSettings, (error) =>
-        error
-          ? console.error("Setting meal settings failed : ", error)
-          : console.log("Writing of Meal Settings Successful")
-      );
+      writeData(settingsPathStr + "/meals", mealSettings);
 
       let goalSettings = {
         calories: {
@@ -55,11 +45,8 @@ function SignUp(props) {
           unit: "g",
         },
       };
-      db.ref(settingsPathStr + "/goals").set(goalSettings, (error) =>
-        error
-          ? console.error("Setting goals settings failed : ", error)
-          : console.log("Writing of Goals Settings Successful")
-      );
+      writeData(settingsPathStr + "/goals", goalSettings);
+
       window.location.href = "/";
     } catch (error) {
       alert(error);

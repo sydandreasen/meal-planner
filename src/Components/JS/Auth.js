@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import application from "./Firebase.js";
+import base from "./Firebase.js";
 
 export const AuthContext = React.createContext();
 
@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
 
   // when authentication state changes, set the user
   useEffect(() => {
-    application.auth().onAuthStateChanged((user) => {
+    base.auth().onAuthStateChanged((user) => {
       setCurrentUser(user);
       setPending(false); // pending = false after setCurrentUserComplete, allows proper AuthContext.Provided return
     });

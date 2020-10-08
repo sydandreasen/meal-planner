@@ -13,7 +13,7 @@ import SignUp from "./SignUp.js";
 import Dashboard from "./Dashboard.js";
 import { AuthProvider } from "./Auth.js";
 import PrivateRoute from "./PrivateRoute.js";
-import application from "./Firebase.js";
+import base from "./Firebase.js";
 import ForgotPassword from "./ForgotPassword.js";
 import { loadingMessage } from "./Commons.js";
 
@@ -22,7 +22,7 @@ function App() {
   const [pending, setPending] = useState(true);
   // when authentication state changes, set the user
   useEffect(() => {
-    application.auth().onAuthStateChanged((user) => {
+    base.auth().onAuthStateChanged((user) => {
       setCurrentUser(user);
       setPending(false); // pending = false after setCurrentUserComplete, allows proper AuthContext.Provided return
     });

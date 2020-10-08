@@ -1,5 +1,5 @@
 import React from "react";
-import application from "./Firebase.js";
+import base from "./Firebase.js";
 import {
   Form,
   Input,
@@ -14,7 +14,7 @@ import "../SCSS/UserHandler.scss";
 function Login(props) {
   const handleLogin = async (values) => {
     try {
-      await application
+      await base
         .auth()
         .signInWithEmailAndPassword(values.email, values.password);
       window.location.href = "/";

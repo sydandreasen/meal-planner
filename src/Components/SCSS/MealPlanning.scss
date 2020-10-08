@@ -87,11 +87,13 @@ $blue: #1890ff;
         margin: 2%;
         color: black;
 
-        input {
+        .ant-picker-input {
           ::placeholder {
             color: black;
-            opacity: 1 !important; // NOT WORKING
           }
+        }
+        .ant-picker-suffix {
+          color: black;
         }
       }
       .ant-select {
@@ -101,18 +103,21 @@ $blue: #1890ff;
 
         .ant-select-selection-placeholder {
           color: black;
-          opacity: 1 !important;
+          opacity: 1;
         }
 
         .ant-select-arrow .anticon {
-          color: rgba(0, 0, 0, 1) !important; // NOT WORKING
-          opacity: 1 !important;
+          color: black;
         }
       }
 
-      p {
-        margin: 2%;
-        margin-bottom: 0;
+      .quantity {
+        display: flex;
+
+        p {
+          margin: auto 0;
+          margin-left: 2%;
+        }
       }
 
       .ant-btn {

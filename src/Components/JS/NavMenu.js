@@ -10,68 +10,72 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import "../SCSS/NavMenu.scss";
-import application from "./Firebase";
+import base from "./Firebase";
 
 function NavMenu(props) {
   const [menuCollapsed, setMenuCollapsed] = useState(true);
-
   const toggleCollapsed = () => setMenuCollapsed(!menuCollapsed);
-  return (
-    <div className="nav-menu">
-      <Button
-        className="toggle-nav"
-        type="primary"
-        onClick={toggleCollapsed}
-        style={{ marginBottom: 16 }}
-      >
-        {menuCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-      </Button>
-      <Menu
-        defaultSelectedKeys={["1"]}
-        mode="inline"
-        inlineCollapsed={menuCollapsed}
-      >
-        <Menu.Item
-          key="1"
-          icon={<CalendarOutlined />}
-          onClick={() => props.page("meal planning")}
+
+  if (props.selected && props.selected.length > 0) {
+    return (
+      <div className="nav-menu">
+        <Button
+          className="toggle-nav"
+          type="primary"
+          onClick={toggleCollapsed}
+          style={{ marginBottom: 16 }}
         >
-          Meal Planning
-        </Menu.Item>
-        <Menu.Item
-          key="2"
-          icon={<ContainerOutlined />}
-          onClick={() => props.page("recipes")}
+          {menuCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        </Button>
+        <Menu
+          defaultSelectedKeys={[props.selected]}
+          mode="inline"
+          inlineCollapsed={menuCollapsed}
         >
-          Recipes
-        </Menu.Item>
-        <Menu.Item
-          key="3"
-          icon={<ProfileOutlined />}
-          onClick={() => props.page("groceries")}
-        >
-          Groceries
-        </Menu.Item>{" "}
-        <Menu.Item
-          key="4"
-          icon={<SettingOutlined />}
-          onClick={() => props.page("settings")}
-        >
-          Settings
-        </Menu.Item>
-        <Menu.Item
-          key="5"
-          icon={<PoweroffOutlined />}
-          onClick={() => {
-            application.auth().signOut();
-            localStorage.clear();
-          }}
-        >
-          Sign Out
-        </Menu.Item>
-      </Menu>
-    </div>
-  );
+          <Menu.Item
+            key="meal planning"
+            icon={<CalendarOutlined />}
+            onClick={() => props.page("meal planning")}
+          >
+            Meal Planning
+          </Menu.Item>
+          <Menu.Item
+            key="recipes"
+            icon={<ContainerOutlined />}
+            onClick={() => props.page("recipes")}
+          >
+            Recipes
+          </Menu.Item>
+          <Menu.Item
+            key="groceries"
+            icon={<ProfileOutlined />}
+            onClick={() => props.page("groceries")}
+          >
+            Groceries
+          </Menu.Item>{" "}
+          <Menu.Item
+            key="settings"
+            icon={<SettingOutlined />}
+            onClick={() => props.page("settings")}
+          >
+            Settings
+          </Menu.Item>
+          <Menu.Item
+            key="sign out"
+            icon={<PoweroffOutlined />}
+            onClick={() => {
+              base.auth().signOut();
+              localStorage.clear();
+            }}
+          >
+            Sign Out
+          </Menu.Item>
+        </Menu>
+      </div>
+    );
+  } else {
+    return <div></div>;
+  }
 }
 
 export default NavMenu;

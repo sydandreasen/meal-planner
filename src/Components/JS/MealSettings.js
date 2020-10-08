@@ -11,15 +11,15 @@ import {
   Form,
 } from "antd";
 import { CloseCircleOutlined, DeleteOutlined } from "@ant-design/icons";
+import { updateWChild, writeData, writeWChild } from "./DbHandler.js";
 import Reorder, { reorder } from "react-reorder";
 
-// TODO take out all db set and update functions and import as common function
-
 function MealSettings(props) {
-  const [meals, setMeals] = useState(undefined);
-  const [showAddMeal, setShowAddMeal] = useState(false);
-  const [showEditMeals, setShowEditMeals] = useState(false);
-  const [form] = Form.useForm();
+  const [meals, setMeals] = useState(undefined); // for easy access and management of meal settings
+  const [showAddMeal, setShowAddMeal] = useState(false); // modal with form to add meal
+  const [showEditMeals, setShowEditMeals] = useState(false); // modal with input and delete icon
+  const [form] = Form.useForm(); // add new meal form instance
+  const [selectedColor, setSelectedColor] = useState(""); // color of new meal, for styling
   // options for meal colors
   const colors = [
     "pink",
@@ -39,6 +39,7 @@ function MealSettings(props) {
 
   useEffect(() => {
     props.db.ref(props.settingsPathStr).on("value", (snapshot) => {
+      // list to DB changes
       setMeals(snapshot.val().meals);
     });
   }, [props.settingsPathStr, props.db]);
@@ -51,9 +52,8 @@ function MealSettings(props) {
           Edit the number, order, color, and names of your daily meals (that
           includes snacks!)
         </p>
-        {/* TODO add styling to indicate the selected meal color */}
         <Modal
-          footer={[<div></div>]}
+          footer={<div></div>}
           visible={showAddMeal}
           centered={true}
           onCancel={() => setShowAddMeal(false)}
@@ -61,6 +61,7 @@ function MealSettings(props) {
           title={"Add A New Meal"}
         >
           <Form
+            className="add-meals"
             form={form}
             onFinish={(values) => {
               let tempMeals = meals.slice();
@@ -69,8 +70,9 @@ function MealSettings(props) {
                 color: values.mealColor,
                 key: meals.length + 1,
               });
-              props.db.ref(props.settingsPathStr + "/meals").set(tempMeals);
+              writeData(props.settingsPathStr + "/meals", tempMeals);
               setMeals(tempMeals);
+              setSelectedColor("");
               form.resetFields();
               setShowAddMeal(false);
             }}
@@ -93,8 +95,11 @@ function MealSettings(props) {
                 {colors.map((color) => (
                   <Badge
                     color={color}
+                    key={color}
+                    className={color === selectedColor ? "active" : ""}
                     onClick={() => {
                       form.setFieldsValue({ mealColor: color });
+                      setSelectedColor(color);
                     }}
                   />
                 ))}
@@ -108,7 +113,7 @@ function MealSettings(props) {
           </Form>
         </Modal>
         <Modal
-          footer={[<div></div>]}
+          footer={<div></div>}
           visible={showEditMeals}
           centered={true}
           onCancel={() => setShowEditMeals(false)}
@@ -128,10 +133,11 @@ function MealSettings(props) {
                     defaultValue={text}
                     maxLength={15}
                     onChange={(e) => {
-                      props.db
-                        .ref(props.settingsPathStr + "/meals")
-                        .child(record.key - 1)
-                        .update({ name: e.target.value });
+                      updateWChild(
+                        props.settingsPathStr + "/meals",
+                        record.key - 1,
+                        { name: e.target.value }
+                      );
                     }}
                   />
                 ),
@@ -143,10 +149,11 @@ function MealSettings(props) {
                   <Popconfirm
                     title={`Are you sure you want to delete ${record.name}?`}
                     onConfirm={() => {
-                      props.db
-                        .ref(props.settingsPathStr + "/meals")
-                        .child(record.key - 1)
-                        .set(null);
+                      writeWChild(
+                        props.settingsPathStr + "/meals",
+                        record.key - 1,
+                        null
+                      );
                     }}
                     okText="Yes, delete it!"
                     cancelText="No, keep it!"
@@ -186,10 +193,7 @@ function MealSettings(props) {
             let tempMeals = meals.slice();
             tempMeals = reorder(tempMeals, previousIndex, nextIndex);
             tempMeals.forEach((meal, index) => (meal.key = index + 1));
-            props.db
-              .ref(props.settingsPathStr + "/meals")
-              .set(tempMeals)
-              .catch((error) => alert(error));
+            writeData(props.settingsPathStr + "/meals", tempMeals);
             setMeals(tempMeals);
           }}
         >
@@ -202,14 +206,15 @@ function MealSettings(props) {
                   <div>
                     {colors.map((color) => (
                       <Badge
+                        key={color}
                         color={color}
                         onClick={() => {
                           let tempMeals = meals.slice();
                           tempMeals[meal.key - 1].color = color;
-                          props.db
-                            .ref(props.settingsPathStr + "/meals")
-                            .set(tempMeals)
-                            .catch((error) => alert(error));
+                          writeData(
+                            props.settingsPathStr + "/meals",
+                            tempMeals
+                          );
                           setMeals(tempMeals);
                         }}
                       />

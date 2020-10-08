@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Select, InputNumber } from "antd";
-import * as firebase from "firebase/app";
+import base from "./Firebase.js";
 import MealSettings from "./MealSettings.js";
+import { updateData } from "./DbHandler.js";
 import "../SCSS/Settings.scss";
-require("firebase/database");
-const db = firebase.database();
+const db = base.database();
 const { Option } = Select;
-
-// TODO take out all db set and update functions and import as common function
 
 function Settings(props) {
   const settingsPathStr = "users/" + props.uid + "/settings";
@@ -15,6 +13,7 @@ function Settings(props) {
 
   useEffect(() => {
     db.ref(settingsPathStr).on("value", (snapshot) => {
+      // listen to DB changes
       setDbSettings(snapshot.val());
     });
   }, [props.uid, settingsPathStr]);
@@ -32,10 +31,7 @@ function Settings(props) {
           style={{ margin: "10px" }}
           defaultValue={DbSettings.view.defaultPage} // query from current settings
           onChange={(value) =>
-            db
-              .ref(settingsPathStr + "/view")
-              .update({ defaultPage: value })
-              .catch((error) => alert(error))
+            updateData(settingsPathStr + "/view", { defaultPage: value })
           } // write to db
         >
           <Option value={"meal planning"}>Meal Planning</Option>
@@ -52,10 +48,7 @@ function Settings(props) {
           style={{ margin: "10px" }}
           defaultValue={DbSettings.view.defaultView} // query from current settings
           onChange={(value) =>
-            db
-              .ref(settingsPathStr + "/view")
-              .update({ defaultView: value })
-              .catch((error) => alert(error))
+            updateData(settingsPathStr + "/view", { defaultView: value })
           } // write to db
         >
           <Option value={"monthly"}>Monthly View</Option>
@@ -78,10 +71,7 @@ function Settings(props) {
             style={{ margin: "10px" }}
             defaultValue={DbSettings.goals.calories.amount} // query from current settings
             onChange={(value) =>
-              db
-                .ref(settingsPathStr + "/goals/calories")
-                .update({ amount: value })
-                .catch((error) => alert(error))
+              updateData(settingsPathStr + "/goals/calories", { amount: value })
             } // write to DB
           />
         </div>
@@ -92,10 +82,9 @@ function Settings(props) {
             style={{ margin: "10px" }}
             defaultValue={DbSettings.goals.carbohydrates.amount} // query from current settings
             onChange={(value) =>
-              db
-                .ref(settingsPathStr + "/goals/carbohydrates")
-                .update({ amount: value })
-                .catch((error) => alert(error))
+              updateData(settingsPathStr + "/goals/carbohydrates", {
+                amount: value,
+              })
             } // write to DB
           />
         </div>
@@ -105,10 +94,7 @@ function Settings(props) {
             style={{ margin: "10px" }}
             defaultValue={DbSettings.goals.protein.amount} // query from current settings
             onChange={(value) =>
-              db
-                .ref(settingsPathStr + "/goals/protein")
-                .update({ amount: value })
-                .catch((error) => alert(error))
+              updateData(settingsPathStr + "/goals/protein", { amount: value })
             } // write to DB
           />
         </div>
@@ -118,10 +104,7 @@ function Settings(props) {
             style={{ margin: "10px" }}
             defaultValue={DbSettings.goals.fat.amount} // query from current settings
             onChange={(value) =>
-              db
-                .ref(settingsPathStr + "/goals/fat")
-                .update({ amount: value })
-                .catch((error) => alert(error))
+              updateData(settingsPathStr + "/goals/fat", { amount: value })
             } // write to DB
           />
         </div>
@@ -131,10 +114,7 @@ function Settings(props) {
             style={{ margin: "10px" }}
             defaultValue={DbSettings.goals.sugar.amount} // query from current settings
             onChange={(value) =>
-              db
-                .ref(settingsPathStr + "/goals/sugar")
-                .update({ amount: value })
-                .catch((error) => alert(error))
+              updateData(settingsPathStr + "/goals/sugar", { amount: value })
             } // write to DB
           />
         </div>

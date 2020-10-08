@@ -4,19 +4,17 @@ import MealPlanning from "./MealPlanning.js";
 import Recipes from "./Recipes.js";
 import Groceries from "./Groceries.js";
 import Settings from "./Settings.js";
-import DbHandler from "./DbHandler.js";
-import * as firebase from "firebase/app";
-require("firebase/database");
-const db = firebase.database();
+import base from "./Firebase.js";
+const db = base.database();
 
 function Dashboard(props) {
   const [defaultView, setDefaultView] = useState("");
   const [page, setPage] = useState("");
   const viewPathStr = "users/" + props.user.uid + "/settings/view";
 
-  // TODO also store view in localStorage so that view doesn't reset to the account default on a refresh
   useEffect(() => {
     db.ref(viewPathStr).once("value", (snap) => {
+      // listen to DB only once
       setDefaultView(snap.val().defaultView);
       if (
         localStorage.getItem("page") &&
@@ -29,7 +27,6 @@ function Dashboard(props) {
     });
   });
 
-  DbHandler(props.user);
   return (
     <div>
       <NavMenu
@@ -37,9 +34,10 @@ function Dashboard(props) {
           setPage(showPage);
           localStorage.setItem("page", showPage);
         }}
+        selected={page}
       />
       {page === "meal planning" ? (
-        <MealPlanning defaultView={defaultView} />
+        <MealPlanning defaultView={defaultView} uid={props.user.uid} />
       ) : page === "recipes" ? (
         <Recipes />
       ) : page === "groceries" ? (

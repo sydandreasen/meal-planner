@@ -114,6 +114,7 @@ export const Monthly = (props) => {
         <tbody>
           <tr>
             <Week
+              mealSettings={props.mealSettings}
               weekNum={1}
               dates={dates}
               currentDate={currentDate}
@@ -124,6 +125,7 @@ export const Monthly = (props) => {
         <tbody>
           <tr>
             <Week
+              mealSettings={props.mealSettings}
               weekNum={2}
               dates={dates}
               currentDate={currentDate}
@@ -134,6 +136,7 @@ export const Monthly = (props) => {
         <tbody>
           <tr>
             <Week
+              mealSettings={props.mealSettings}
               weekNum={3}
               dates={dates}
               currentDate={currentDate}
@@ -144,6 +147,7 @@ export const Monthly = (props) => {
         <tbody>
           <tr>
             <Week
+              mealSettings={props.mealSettings}
               weekNum={4}
               dates={dates}
               currentDate={currentDate}
@@ -154,6 +158,7 @@ export const Monthly = (props) => {
         <tbody>
           <tr>
             <Week
+              mealSettings={props.mealSettings}
               weekNum={5}
               dates={dates}
               currentDate={currentDate}
@@ -199,9 +204,9 @@ export const DayCard = (props) => {
         Total : {dayNutrients.cals ? dayNutrients.cals : 0} cals
       </div>
       <div className="meals">
-        <MonthlyMeal color={"red"} mealName="Breakfast" />
-        <MonthlyMeal color={"blue"} mealName="Lunch" />
-        <MonthlyMeal color={"green"} mealName="Dinner" />
+        {props.mealSettings.map((meal) => (
+          <MonthlyMeal color={meal.color} mealName={meal.name} key={meal.key} />
+        ))}
       </div>
     </td>
   );
@@ -222,6 +227,7 @@ export const Week = (props) => {
   console.log();
   return daysInWeek.map((dayObj) => (
     <DayCard
+      mealSettings={props.mealSettings}
       key={dayObj.date}
       date={dayObj.date}
       currentDate={props.currentDate}

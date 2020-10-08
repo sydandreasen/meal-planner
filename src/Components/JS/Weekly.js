@@ -98,6 +98,7 @@ export const Weekly = (props) => {
             <tr>
               {daysInWeek.map((weekday) => (
                 <WeekdayCard
+                  mealSettings={props.mealSettings}
                   key={weekday}
                   date={dates[weekday]}
                   currentDate={currentDate}
@@ -130,9 +131,9 @@ export const WeekdayCard = (props) => {
         {dayNutrients.cals ? dayNutrients.cals : 0} cals
       </div>
       <div className="meals">
-        <WeeklyMeal color={"red"} mealName={"Breakfast"} />
-        <WeeklyMeal color={"blue"} mealName={"Lunch"} />
-        <WeeklyMeal color={"green"} mealName={"Dinner"} />
+        {props.mealSettings.map((meal) => (
+          <WeeklyMeal color={meal.color} mealName={meal.name} key={meal.key} />
+        ))}
       </div>
     </td>
   );

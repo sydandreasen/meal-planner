@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Input,
@@ -18,65 +18,101 @@ import {
   PlusCircleOutlined,
   MinusCircleOutlined,
 } from "@ant-design/icons";
+import base from "./Firebase.js";
+const db = base.database();
 
 const { Option } = Select;
 
 function MealPlanning(props) {
-  const [view, setView] = useState(props.defaultView);
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [showSearch, setShowSearch] = useState(false);
+  const [view, setView] = useState(""); // monthly/weekly/daily
+  const [currentDate, setCurrentDate] = useState(new Date()); // date selected
+  const [showSearch, setShowSearch] = useState(false); // food search
+  const [mealSettings, setMealSettings] = useState([]);
+  const settingsPathStr = "users/" + props.uid + "/settings";
 
-  return (
-    <div className="planning-page">
-      <h1>Welcome to your Meal Planning Dashboard</h1>
-      <div className="button-wrapper">
-        <div className="left-group">
-          <Button type="primary" onClick={() => setShowSearch(!showSearch)}>
-            Add Food
-          </Button>
-          <Button type="primary">Export Plan</Button>
+  useEffect(() => {
+    db.ref(settingsPathStr + "/view").once("value", (snap) => {
+      // listen to DB only once
+      if (
+        localStorage.getItem("view") &&
+        localStorage.getItem("view").length > 0
+      ) {
+        setView(localStorage.getItem("view"));
+      } else if (view === "") {
+        setView(snap.val().defaultView);
+      }
+    });
+  });
+
+  useEffect(() => {
+    db.ref(settingsPathStr).on("value", (snapshot) => {
+      // listen to DB changes
+      setMealSettings(snapshot.val().meals);
+    });
+  }, [props.uid, settingsPathStr]);
+
+  if (view && view.length > 0) {
+    return (
+      <div className="planning-page">
+        <h1>Welcome to your Meal Planning Dashboard</h1>
+        <div className="button-wrapper">
+          <div className="left-group">
+            <Button type="primary" onClick={() => setShowSearch(!showSearch)}>
+              Add Food
+            </Button>
+            <Button type="primary">Export Plan</Button>
+          </div>
+          <div className="right-group">
+            <Button type="primary" onClick={() => setCurrentDate(new Date())}>
+              Jump to Today
+            </Button>
+            <Select
+              defaultValue={view}
+              style={{ width: 140 }}
+              onChange={(value) => {
+                setView(value);
+                localStorage.setItem("view", value); // store to load same weekly/monthly/daily view on refesh if the meal planning page was the one up
+              }}
+            >
+              <Option value={"monthly"}>Monthly View</Option>
+              <Option value={"weekly"}>Weekly View</Option>
+              <Option value={"daily"}>Daily View</Option>
+            </Select>
+          </div>
         </div>
-        <div className="right-group">
-          <Button type="primary" onClick={() => setCurrentDate(new Date())}>
-            Jump to Today
-          </Button>
-          <Select
-            defaultValue={"weekly"}
-            style={{ width: 140 }}
-            onChange={(value) => setView(value)}
-          >
-            <Option value={"monthly"}>Monthly View</Option>
-            <Option value={"weekly"}>Weekly View</Option>
-            <Option value={"daily"}>Daily View</Option>
-          </Select>
+        <Search
+          visible={showSearch}
+          setShowSearch={(bool) => setShowSearch(bool)}
+          mealSettings={mealSettings}
+        />
+        <div className="calendar">
+          {view === "monthly" ? (
+            <Monthly
+              currentDate={currentDate}
+              setCurrentDate={(date) => setCurrentDate(date)}
+              mealSettings={mealSettings}
+            />
+          ) : view === "weekly" ? (
+            <Weekly
+              currentDate={currentDate}
+              setCurrentDate={(date) => setCurrentDate(date)}
+              mealSettings={mealSettings}
+            />
+          ) : view === "daily" ? (
+            <Daily
+              currentDate={currentDate}
+              setCurrentDate={(date) => setCurrentDate(date)}
+              mealSettings={mealSettings}
+            />
+          ) : (
+            ""
+          )}
         </div>
       </div>
-      <Search
-        visible={showSearch}
-        setShowSearch={(bool) => setShowSearch(bool)}
-      />
-      <div className="calendar">
-        {view === "monthly" ? (
-          <Monthly
-            currentDate={currentDate}
-            setCurrentDate={(date) => setCurrentDate(date)}
-          />
-        ) : view === "weekly" ? (
-          <Weekly
-            currentDate={currentDate}
-            setCurrentDate={(date) => setCurrentDate(date)}
-          />
-        ) : view === "daily" ? (
-          <Daily
-            currentDate={currentDate}
-            setCurrentDate={(date) => setCurrentDate(date)}
-          />
-        ) : (
-          ""
-        )}
-      </div>
-    </div>
-  );
+    );
+  } else {
+    return <div></div>;
+  }
 }
 
 export const Search = (props) => {
@@ -101,7 +137,6 @@ export const Search = (props) => {
         .then((response) => {
           setFoodName(response.data.text);
           foodId = response.data.hints[0].food.foodId;
-          console.log(foodId);
           // find which measure is for serving
           response.data.hints[0].measures.forEach((measure) => {
             if (measure.label === "Serving") {
@@ -168,7 +203,15 @@ export const Search = (props) => {
         Search
       </Button>
 
-      {showFoodInfo ? <FoodInfo food={foodName} nutrients={foodInfo} /> : ""}
+      {showFoodInfo ? (
+        <FoodInfo
+          food={foodName}
+          nutrients={foodInfo}
+          mealSettings={props.mealSettings}
+        />
+      ) : (
+        ""
+      )}
     </Modal>
   );
 };
@@ -215,15 +258,20 @@ export const FoodInfo = (props) => {
             }
           />
           <Select placeholder="Select a meal to plan this food">
-            <Option value="breakfast">Breakfast</Option>
-            <Option value="lunch">Lunch</Option>
-            <Option value="dinner">Dinner</Option>
+            {props.mealSettings.map((meal) => (
+              <Option value={meal.name} key={meal.key}>
+                {meal.name}
+              </Option>
+            ))}
           </Select>
           <br />
-          <p>
-            Quantity :
-            <InputNumber style={{ margin: "10px" }} defaultValue={1} />
-          </p>
+          <div className="quantity">
+            <p>Quantity :</p>
+            <InputNumber
+              style={{ margin: "10px", display: "block" }}
+              defaultValue={1}
+            />
+          </div>
 
           <br />
           <Button icon={<PlusCircleOutlined />}>Add it!</Button>
