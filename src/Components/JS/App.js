@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useBeforeunload } from "react-beforeunload";
 import {
   BrowserRouter as Router,
   Switch,
@@ -13,7 +14,7 @@ import SignUp from "./SignUp.js";
 import Dashboard from "./Dashboard.js";
 import { AuthProvider } from "./Auth.js";
 import PrivateRoute from "./PrivateRoute.js";
-import base from "./Firebase.js";
+import base, { session } from "./Firebase.js";
 import ForgotPassword from "./ForgotPassword.js";
 import { loadingMessage } from "./Commons.js";
 
@@ -30,7 +31,8 @@ function App() {
 
   let message = loadingMessage();
 
-  window.onbeforeunload(() => localStorage.clear());
+  session(); // logout when session ends
+  useBeforeunload(() => localStorage.clear()); // clear data from local storage when tab/window closes
 
   return (
     <div className="App">

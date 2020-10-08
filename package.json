@@ -12,6 +12,7 @@
     "firebase": "^7.19.1",
     "firebaseui": "^4.6.1",
     "react": "^16.13.1",
+    "react-beforeunload": "^2.2.4",
     "react-dom": "^16.13.1",
     "react-reorder": "^3.0.0-alpha.7",
     "react-router-dom": "^5.2.0",

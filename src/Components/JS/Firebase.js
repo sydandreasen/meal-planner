@@ -11,6 +11,9 @@ const base = firebase.initializeApp({
   messagingSenderId: process.env.REACT_APP_FIREBASE_SENDER_ID, // note that firebase console provided more keys, youtube video could be outdated here
 });
 
+export const session = () =>
+  base.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION); // log user out when session ends
+
 export const auth = firebase.auth();
 
 export default base;
