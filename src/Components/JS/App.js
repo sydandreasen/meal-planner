@@ -30,6 +30,8 @@ function App() {
 
   let message = loadingMessage();
 
+  window.onbeforeunload(() => localStorage.clear());
+
   return (
     <div className="App">
       <header>
