@@ -13,7 +13,10 @@ function SignUp(props) {
         .createUserWithEmailAndPassword(values.email, values.password);
       let user = base.auth().currentUser;
       const settingsPathStr = "users/" + user.uid + "/settings";
-      let viewSettings = { defaultPage: "planning", defaultView: "weekly" };
+      let viewSettings = {
+        defaultPage: "meal planning",
+        defaultView: "weekly",
+      };
       writeData(settingsPathStr + "/view", viewSettings);
 
       let mealSettings = [
