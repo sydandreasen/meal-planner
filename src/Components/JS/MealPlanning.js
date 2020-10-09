@@ -19,16 +19,20 @@ import {
   MinusCircleOutlined,
 } from "@ant-design/icons";
 import base from "./Firebase.js";
+import { writeData } from "./DbHandler.js";
 const db = base.database();
 
 const { Option } = Select;
 
 function MealPlanning(props) {
   const [view, setView] = useState(""); // monthly/weekly/daily
+  // TODO put currentDate into localStorage too to maintain that on refresh as well
   const [currentDate, setCurrentDate] = useState(new Date()); // date selected
   const [showSearch, setShowSearch] = useState(false); // food search
   const [mealSettings, setMealSettings] = useState([]);
   const settingsPathStr = "users/" + props.uid + "/settings";
+  const plansPathStr = "users/" + props.uid + "/plans";
+  const [plans, setPlans] = useState([]);
 
   useEffect(() => {
     db.ref(settingsPathStr + "/view").once("value", (snap) => {
@@ -50,6 +54,13 @@ function MealPlanning(props) {
       setMealSettings(snapshot.val().meals);
     });
   }, [props.uid, settingsPathStr]);
+
+  useEffect(() => {
+    db.ref(plansPathStr).on("value", (snapshot) => {
+      // listen to DB changes
+      setPlans(snapshot.val());
+    });
+  }, [props.uid, plansPathStr]);
 
   if (view && view.length > 0) {
     return (
@@ -84,6 +95,8 @@ function MealPlanning(props) {
           visible={showSearch}
           setShowSearch={(bool) => setShowSearch(bool)}
           mealSettings={mealSettings}
+          plansPathStr={plansPathStr}
+          plans={plans}
         />
         <div className="calendar">
           {view === "monthly" ? (
@@ -91,18 +104,21 @@ function MealPlanning(props) {
               currentDate={currentDate}
               setCurrentDate={(date) => setCurrentDate(date)}
               mealSettings={mealSettings}
+              plans={plans}
             />
           ) : view === "weekly" ? (
             <Weekly
               currentDate={currentDate}
               setCurrentDate={(date) => setCurrentDate(date)}
               mealSettings={mealSettings}
+              plans={plans}
             />
           ) : view === "daily" ? (
             <Daily
               currentDate={currentDate}
               setCurrentDate={(date) => setCurrentDate(date)}
               mealSettings={mealSettings}
+              plans={plans}
             />
           ) : (
             ""
@@ -127,16 +143,16 @@ export const Search = (props) => {
       const parserReq = `https://api.edamam.com/api/food-database/v2/parser?ingr=${foodStr}&app_id=${process.env.REACT_APP_EDAMAM_APP_ID}&app_key=${process.env.REACT_APP_EDAMAM_APP_KEY}`;
 
       // get info from parser request to give to nutrients request
-      let foodId = "";
       let servURI = "";
       let quantity = 1;
+      let foodId = "";
 
       // parser request
       await axios
         .get(parserReq)
         .then((response) => {
-          setFoodName(response.data.text);
           foodId = response.data.hints[0].food.foodId;
+          setFoodName({ word: response.data.text, id: foodId });
           // find which measure is for serving
           response.data.hints[0].measures.forEach((measure) => {
             if (measure.label === "Serving") {
@@ -205,7 +221,9 @@ export const Search = (props) => {
 
       {showFoodInfo ? (
         <FoodInfo
-          food={foodName}
+          plansPathStr={props.plansPathStr}
+          plans={props.plans}
+          food={foodName} // word and id
           nutrients={foodInfo}
           mealSettings={props.mealSettings}
         />
@@ -218,11 +236,12 @@ export const Search = (props) => {
 
 export const FoodInfo = (props) => {
   const [showNutrients, setShowNutrients] = useState(true);
+  const [addFood, setAddFood] = useState({});
 
   return (
     <div className="food-wrapper">
       <div className="head">
-        <h3>{`${props.food} (1 Serving)`}</h3>
+        <h3>{`${props.food.word} (1 Serving)`}</h3>
         <Button
           type="primary"
           icon={
@@ -253,11 +272,20 @@ export const FoodInfo = (props) => {
         <div className="add-food">
           <DatePicker
             placeholder="Select a date to plan this food"
-            onChange={(date, dateString) =>
-              console.log("date selected:", dateString)
-            }
+            onChange={(date, dateString) => {
+              setAddFood((prevState) => {
+                return { ...prevState, date: dateString };
+              });
+            }}
           />
-          <Select placeholder="Select a meal to plan this food">
+          <Select
+            placeholder="Select a meal to plan this food"
+            onChange={(selection) => {
+              setAddFood((prevState) => {
+                return { ...prevState, meal: selection };
+              });
+            }}
+          >
             {props.mealSettings.map((meal) => (
               <Option value={meal.name} key={meal.key}>
                 {meal.name}
@@ -270,11 +298,61 @@ export const FoodInfo = (props) => {
             <InputNumber
               style={{ margin: "10px", display: "block" }}
               defaultValue={1}
+              onChange={(num) =>
+                setAddFood((prevState) => {
+                  return { ...prevState, quantity: num };
+                })
+              }
             />
           </div>
 
           <br />
-          <Button icon={<PlusCircleOutlined />}>Add it!</Button>
+          <Button
+            icon={<PlusCircleOutlined />}
+            onClick={() => {
+              let add = addFood;
+              add = {
+                ...add,
+                foodId: props.food.id,
+                name: props.food.word,
+              };
+              if (!add.quantity) {
+                // wasn't defined, left as default value of one
+                add.quantity = 1;
+              }
+              let mealFoods =
+                props.plans &&
+                props.plans[add.date] &&
+                props.plans[add.date][add.meal]
+                  ? props.plans[add.date][add.meal] // if there's info for data and meal, use it
+                  : [];
+              // determine if food already saved to meal or not.
+              // if it is, add the quantities together
+              // if not, push to mealFoods
+              let alreadyPlanned = false;
+              mealFoods.forEach((food, index) => {
+                if (food.foodId === add.foodId) {
+                  mealFoods[index].quantity =
+                    mealFoods[index].quantity + add.quantity;
+                  alreadyPlanned = true;
+                }
+              });
+              if (!alreadyPlanned) {
+                mealFoods.push({
+                  foodId: add.foodId,
+                  quantity: add.quantity,
+                  name: add.name,
+                });
+              }
+              writeData(
+                props.plansPathStr + "/" + add.date + "/" + add.meal,
+                mealFoods
+              );
+              setAddFood({});
+            }}
+          >
+            Add it!
+          </Button>
         </div>
       )}
     </div>

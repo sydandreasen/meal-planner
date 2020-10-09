@@ -119,6 +119,7 @@ export const Monthly = (props) => {
               dates={dates}
               currentDate={currentDate}
               setCurrentDate={props.setCurrentDate}
+              plans={props.plans}
             />
           </tr>
         </tbody>
@@ -130,6 +131,7 @@ export const Monthly = (props) => {
               dates={dates}
               currentDate={currentDate}
               setCurrentDate={props.setCurrentDate}
+              plans={props.plans}
             />
           </tr>
         </tbody>
@@ -141,6 +143,7 @@ export const Monthly = (props) => {
               dates={dates}
               currentDate={currentDate}
               setCurrentDate={props.setCurrentDate}
+              plans={props.plans}
             />
           </tr>
         </tbody>
@@ -152,6 +155,7 @@ export const Monthly = (props) => {
               dates={dates}
               currentDate={currentDate}
               setCurrentDate={props.setCurrentDate}
+              plans={props.plans}
             />
           </tr>
         </tbody>
@@ -163,6 +167,7 @@ export const Monthly = (props) => {
               dates={dates}
               currentDate={currentDate}
               setCurrentDate={props.setCurrentDate}
+              plans={props.plans}
             />
           </tr>
         </tbody>
@@ -172,6 +177,11 @@ export const Monthly = (props) => {
 };
 
 export const MonthlyMeal = (props) => {
+  let cals = 0;
+  // props.plans.forEach(food => {
+  // TODO need to set up query to get all food nutrients in MealPlanning.js in order to add up all cals in meal here
+  // })
+
   return (
     <Descriptions title="" column={1} size={"small"} className={"meal"}>
       <Descriptions.Item
@@ -192,6 +202,7 @@ export const DayCard = (props) => {
       : props.inCurrentMonth
       ? "day-card"
       : "day-card inactive-month";
+
   return (
     <td
       className={dayClassName}
@@ -200,12 +211,26 @@ export const DayCard = (props) => {
       <div className="day-num">
         <p>{props.date.getDate()}</p>
       </div>
-      <div className="total-cals">
+      <div
+        className="total-cals"
+        // TODO need to query nutrients to total up daily calories
+      >
         Total : {dayNutrients.cals ? dayNutrients.cals : 0} cals
       </div>
       <div className="meals">
         {props.mealSettings.map((meal) => (
-          <MonthlyMeal color={meal.color} mealName={meal.name} key={meal.key} />
+          <MonthlyMeal
+            color={meal.color}
+            mealName={meal.name}
+            key={meal.key}
+            plans={
+              props.plans // if the plans already have the date, try to return the meal-specific plans, otherwise return undefined, as plans without the date returns undefined anyway
+                ? props.plans[
+                    meal.name.charAt(0).toUpperCase() + meal.name.slice(1)
+                  ]
+                : undefined
+            }
+          />
         ))}
       </div>
     </td>
@@ -233,6 +258,19 @@ export const Week = (props) => {
       currentDate={props.currentDate}
       inCurrentMonth={dayObj.inCurrentMonth}
       setCurrentDate={props.setCurrentDate}
+      plans={
+        props.plans[
+          `${dayObj.date.getFullYear()}-${
+            dayObj.date.getMonth() + 1 > 9
+              ? dayObj.date.getMonth() + 1
+              : `0${dayObj.date.getMonth() + 1}`
+          }-${
+            dayObj.date.getDate() > 9
+              ? dayObj.date.getDate()
+              : `0${dayObj.date.getDate()}`
+          }`
+        ]
+      }
     />
   ));
 };

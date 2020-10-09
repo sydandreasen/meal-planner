@@ -103,6 +103,19 @@ export const Weekly = (props) => {
                   date={dates[weekday]}
                   currentDate={currentDate}
                   setCurrentDate={props.setCurrentDate}
+                  plans={
+                    props.plans[
+                      `${dates[weekday].getFullYear()}-${
+                        dates[weekday].getMonth() + 1 > 9
+                          ? dates[weekday].getMonth() + 1
+                          : `0${dates[weekday].getMonth() + 1}`
+                      }-${
+                        dates[weekday].getDate() > 9
+                          ? dates[weekday].getDate()
+                          : `0${dates[weekday].getDate()}`
+                      }`
+                    ]
+                  }
                 />
               ))}
             </tr>
@@ -127,12 +140,26 @@ export const WeekdayCard = (props) => {
       <div className="day-num">
         <p>{props.date.getDate()}</p>
       </div>
-      <div className="total-cals">
+      <div
+        className="total-cals"
+        // TODO need to have nutrients queried to total up day's cals
+      >
         {dayNutrients.cals ? dayNutrients.cals : 0} cals
       </div>
       <div className="meals">
         {props.mealSettings.map((meal) => (
-          <WeeklyMeal color={meal.color} mealName={meal.name} key={meal.key} />
+          <WeeklyMeal
+            color={meal.color}
+            mealName={meal.name}
+            key={meal.key}
+            plans={
+              props.plans // if the plans already have the date, try to return the meal-specific plans, otherwise return undefined, as plans without the date returns undefined anyway
+                ? props.plans[
+                    meal.name.charAt(0).toUpperCase() + meal.name.slice(1)
+                  ]
+                : undefined
+            }
+          />
         ))}
       </div>
     </td>
@@ -147,6 +174,7 @@ export const WeeklyMeal = (props) => {
           color={props.color}
           text={`${props.mealName} : ${
             mealNutrients.cals ? mealNutrients.cals : 0
+            // TODO need to have queried food nutrition information for totalling meal cals
           } cals`}
         />
       }
@@ -154,8 +182,17 @@ export const WeeklyMeal = (props) => {
       size={"small"}
       className={"meal"}
     >
-      {mealNutrients.cals ? (
-        <Descriptions.Item label={""}>{foodNutrients.cals}</Descriptions.Item>
+      {/* {mealNutrients.cals ? ( */}
+      {props.plans ? (
+        props.plans.map((food) => (
+          <Descriptions.Item
+            key={food.foodId}
+            label={food.name}
+            // TODO need to have queried food nutrition information for food cals
+          >
+            XX cals
+          </Descriptions.Item>
+        ))
       ) : (
         <Descriptions.Item label={"No Foods"}>Add Some!</Descriptions.Item>
       )}
