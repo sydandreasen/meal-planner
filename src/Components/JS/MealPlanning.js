@@ -348,7 +348,6 @@ export const FoodInfo = (props) => {
                 props.plansPathStr + "/" + add.date + "/" + add.meal,
                 mealFoods
               );
-              setAddFood({});
             }}
           >
             Add it!
