@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const loadingMessage = () => {
   const options = [
     // "Good habits take time, and so does loading this page.",
@@ -30,4 +32,95 @@ export const dayNutrients = (props) => {
     meal.foods.forEach((food) => (dayCals += food.cals))
   );
   return { cals: dayCals };
+};
+
+// run parser request to find foodId from a search string
+export const parseRequest = async (
+  search,
+  setFoodId, // function
+  setMeasureURI, // function
+  setFoodWord, // function
+  setFoodInfo // function
+) => {
+  // get the URL encoded for the parser request
+  const foodStr = search.replace(" ", "%20");
+  const parserReq = `https://api.edamam.com/api/food-database/v2/parser?ingr=${foodStr}&app_id=${process.env.REACT_APP_EDAMAM_APP_ID}&app_key=${process.env.REACT_APP_EDAMAM_APP_KEY}`;
+
+  // get info from parser request to give to nutrients request
+  let measureURI = "";
+  let foodId = "";
+  let foodWord = ""; // word for food in English
+
+  // make parser request
+  await axios
+    .get(parserReq)
+    .then(async (response) => {
+      foodWord = response.data.text;
+      // find which measure is for serving
+      for (let hint of response.data.hints) {
+        for (let measure of hint.measures) {
+          if (measure.label === "Serving") {
+            measureURI = measure.uri;
+            foodId = hint.food.foodId;
+            break;
+          }
+        }
+        if (foodId.length > 0) {
+          break;
+        }
+      }
+      // alert if serving not available... could eventually be changed into defaulting to very first measurement available
+      if (!foodId.length > 0) {
+        alert(`Unable to find serving information for ${search}.`);
+      }
+
+      setFoodId(foodId);
+      setMeasureURI(measureURI);
+      setFoodWord(foodWord);
+
+      // then find nutrients information
+      await nutrientRequest(foodId, measureURI, (foodInfo) =>
+        setFoodInfo(foodInfo)
+      );
+    })
+    .catch(() => console.error("Parser GET request failed."));
+};
+
+// make nutrients request from foodId and measurement URI
+export const nutrientRequest = async (foodId, measureURI, setFoodInfo) => {
+  const quantity = 1;
+  let tempInfo = [];
+  // nutrients request
+  await axios
+    .post(
+      `https://api.edamam.com/api/food-database/v2/nutrients?app_id=${process.env.REACT_APP_EDAMAM_APP_ID}&app_key=${process.env.REACT_APP_EDAMAM_APP_KEY}`,
+      {
+        ingredients: [
+          {
+            quantity: quantity,
+            measureURI: measureURI,
+            foodId: foodId,
+          },
+        ],
+      }
+    )
+    .then((response) => {
+      tempInfo[0] = {
+        label: "Calories",
+        quantity: response.data.calories,
+        unit: "cals",
+      };
+      let nutrientNames = Object.getOwnPropertyNames(
+        response.data.totalNutrients
+      );
+      nutrientNames.forEach((nutrient) => {
+        tempInfo.push({
+          label: response.data.totalNutrients[nutrient].label,
+          quantity: response.data.totalNutrients[nutrient].quantity,
+          unit: response.data.totalNutrients[nutrient].unit,
+        });
+      });
+      setFoodInfo(tempInfo);
+    })
+    .catch(() => console.error("Nutrients POST request failed."));
 };

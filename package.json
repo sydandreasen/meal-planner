@@ -14,9 +14,11 @@
     "react": "^16.13.1",
     "react-beforeunload": "^2.2.4",
     "react-dom": "^16.13.1",
+    "react-graph-vis": "^1.0.5",
     "react-reorder": "^3.0.0-alpha.7",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
+    "react-vis": "^1.11.7",
     "sass": "^1.26.10"
   },
   "scripts": {

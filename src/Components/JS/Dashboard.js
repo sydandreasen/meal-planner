@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import NavMenu from "./NavMenu.js";
 import MealPlanning from "./MealPlanning.js";
-import Recipes from "./Recipes.js";
-import Groceries from "./Groceries.js";
+// import Recipes from "./Recipes.js";
+// import Groceries from "./Groceries.js";
+import ErrorPage from "./ErrorPage.js";
 import Settings from "./Settings.js";
 import base from "./Firebase.js";
 const db = base.database();
@@ -38,14 +39,15 @@ function Dashboard(props) {
       />
       {page === "meal planning" ? (
         <MealPlanning defaultView={defaultView} uid={props.user.uid} />
-      ) : page === "recipes" ? (
-        <Recipes />
-      ) : page === "groceries" ? (
-        <Groceries />
-      ) : page === "settings" ? (
+      ) : // : page === "recipes" ? (
+      //   <Recipes />
+      // ) : page === "groceries" ? (
+      //   <Groceries />
+      // )
+      page === "settings" ? (
         <Settings uid={props.user.uid} />
       ) : (
-        ""
+        <ErrorPage />
       )}
     </div>
   );

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Input,
   InputNumber,
@@ -9,6 +8,7 @@ import {
   Descriptions,
   DatePicker,
 } from "antd";
+import { parseRequest, nutrientRequest } from "./Commons.js";
 import "../SCSS/MealPlanning.scss";
 import { Monthly } from "./Monthly.js";
 import { Weekly } from "./Weekly.js";
@@ -33,10 +33,12 @@ function MealPlanning(props) {
   const settingsPathStr = "users/" + props.uid + "/settings";
   const plansPathStr = "users/" + props.uid + "/plans";
   const [plans, setPlans] = useState([]);
+  const [goals, setGoals] = useState([]);
 
   useEffect(() => {
     db.ref(settingsPathStr + "/view").once("value", (snap) => {
       // listen to DB only once
+      // FIXME, doesn't stick on refresh, only sticking when switch to settings and come back
       if (
         localStorage.getItem("view") &&
         localStorage.getItem("view").length > 0
@@ -61,6 +63,13 @@ function MealPlanning(props) {
       setPlans(snapshot.val());
     });
   }, [props.uid, plansPathStr]);
+
+  useEffect(() => {
+    db.ref(settingsPathStr + "/goals").on("value", (snapshot) => {
+      // listen to DB changes
+      setGoals(snapshot.val());
+    });
+  }, [props.uid, settingsPathStr]);
 
   if (view && view.length > 0) {
     return (
@@ -119,6 +128,7 @@ function MealPlanning(props) {
               setCurrentDate={(date) => setCurrentDate(date)}
               mealSettings={mealSettings}
               plans={plans}
+              goals={goals}
             />
           ) : (
             ""
@@ -135,68 +145,19 @@ export const Search = (props) => {
   const [searchStr, setSearchStr] = useState("");
   const [showFoodInfo, setShowFoodInfo] = useState(false);
   const [foodInfo, setFoodInfo] = useState([]);
-  const [foodName, setFoodName] = useState("");
-  const getFood = async (searchStr) => {
+  const [foodId, setFoodId] = useState("");
+  const [measureURI, setMeasureURI] = useState("");
+  const [foodWord, setFoodWord] = useState("");
+  const getFood = (searchStr) => {
     if (searchStr) {
-      // get the URL encorded for the parser request
-      const foodStr = searchStr.replace(" ", "%20");
-      const parserReq = `https://api.edamam.com/api/food-database/v2/parser?ingr=${foodStr}&app_id=${process.env.REACT_APP_EDAMAM_APP_ID}&app_key=${process.env.REACT_APP_EDAMAM_APP_KEY}`;
-
-      // get info from parser request to give to nutrients request
-      let servURI = "";
-      let quantity = 1;
-      let foodId = "";
-
-      // parser request
-      await axios
-        .get(parserReq)
-        .then((response) => {
-          foodId = response.data.hints[0].food.foodId;
-          setFoodName({ word: response.data.text, id: foodId });
-          // find which measure is for serving
-          response.data.hints[0].measures.forEach((measure) => {
-            if (measure.label === "Serving") {
-              servURI = measure.uri;
-            }
-          });
-        })
-        .catch(() => console.error("Parser GET request failed."));
-
-      // nutrients request
-      await axios
-        .post(
-          `https://api.edamam.com/api/food-database/v2/nutrients?app_id=${process.env.REACT_APP_EDAMAM_APP_ID}&app_key=${process.env.REACT_APP_EDAMAM_APP_KEY}`,
-          {
-            ingredients: [
-              {
-                quantity: quantity,
-                measureURI: servURI,
-                foodId: foodId,
-              },
-            ],
-          }
-        )
-        .then((response) => {
-          let tempInfo = [];
-          tempInfo[0] = {
-            label: "Calories",
-            quantity: response.data.calories,
-            unit: "cals",
-          };
-          let nutrientNames = Object.getOwnPropertyNames(
-            response.data.totalNutrients
-          );
-          nutrientNames.forEach((nutrient) => {
-            tempInfo.push({
-              label: response.data.totalNutrients[nutrient].label,
-              quantity: response.data.totalNutrients[nutrient].quantity,
-              unit: response.data.totalNutrients[nutrient].unit,
-            });
-          });
-          setFoodInfo(tempInfo);
-          setShowFoodInfo(true);
-        })
-        .catch(() => console.error("Nutrients POST request failed."));
+      parseRequest(
+        searchStr,
+        (foodId) => setFoodId(foodId),
+        (measureURI) => setMeasureURI(measureURI),
+        (foodWord) => setFoodWord(foodWord),
+        (foodInfo) => setFoodInfo(foodInfo)
+      );
+      setShowFoodInfo(true);
     }
   };
 
@@ -223,7 +184,7 @@ export const Search = (props) => {
         <FoodInfo
           plansPathStr={props.plansPathStr}
           plans={props.plans}
-          food={foodName} // word and id
+          food={{ word: foodWord, id: foodId }} // word and id
           nutrients={foodInfo}
           mealSettings={props.mealSettings}
         />

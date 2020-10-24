@@ -17,6 +17,7 @@ import PrivateRoute from "./PrivateRoute.js";
 import base, { session } from "./Firebase.js";
 import ForgotPassword from "./ForgotPassword.js";
 import { loadingMessage } from "./Commons.js";
+import ErrorPage from "./ErrorPage";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -71,6 +72,9 @@ function App() {
               </PrivateRoute>
               <Route exact path="/forgot-password">
                 <ForgotPassword />
+              </Route>
+              <Route path="*">
+                <ErrorPage />
               </Route>
             </Switch>
           </Router>

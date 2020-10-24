@@ -4,8 +4,8 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   CalendarOutlined,
-  ContainerOutlined,
-  ProfileOutlined,
+  // ContainerOutlined,
+  // ProfileOutlined,
   PoweroffOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
@@ -39,7 +39,7 @@ function NavMenu(props) {
           >
             Meal Planning
           </Menu.Item>
-          <Menu.Item
+          {/* <Menu.Item
             key="recipes"
             icon={<ContainerOutlined />}
             onClick={() => props.page("recipes")}
@@ -52,7 +52,7 @@ function NavMenu(props) {
             onClick={() => props.page("groceries")}
           >
             Groceries
-          </Menu.Item>{" "}
+          </Menu.Item> */}
           <Menu.Item
             key="settings"
             icon={<SettingOutlined />}
