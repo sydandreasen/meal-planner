@@ -34,6 +34,7 @@ $lightred: rgba(248, 31, 7, 0.2);
   }
 
   .day-card {
+    width: 14.29%;
     min-width: 125px;
     border: solid 1.5px black;
     padding: 0.15%;
@@ -43,8 +44,6 @@ $lightred: rgba(248, 31, 7, 0.2);
     }
 
     .day-num {
-      // float: left;
-
       p {
         border: black solid 1px;
         border-radius: 50%;

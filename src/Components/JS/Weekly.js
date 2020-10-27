@@ -1,7 +1,6 @@
 import React from "react";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
-import { Descriptions, Tooltip, Badge } from "antd";
-import { dayNutrients, mealNutrients, foodNutrients } from "./Commons.js";
+import { LeftOutlined, RightOutlined, DashOutlined } from "@ant-design/icons";
+import { Tooltip, Badge } from "antd";
 import "../SCSS/Weekly.scss";
 
 export const Weekly = (props) => {
@@ -82,46 +81,50 @@ export const Weekly = (props) => {
             }}
           />
         </Tooltip>
-        <table>
-          <thead>
-            <tr>
-              <th>Sunday</th>
-              <th>Monday</th>
-              <th>Tuesday</th>
-              <th>Wednesday</th>
-              <th>Thursday</th>
-              <th>Friday</th>
-              <th>Saturday</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              {daysInWeek.map((weekday) => (
-                <WeekdayCard
-                  mealSettings={props.mealSettings}
-                  key={weekday}
-                  date={dates[weekday]}
-                  currentDate={currentDate}
-                  setCurrentDate={props.setCurrentDate}
-                  plans={
-                    props.plans[
-                      `${dates[weekday].getFullYear()}-${
-                        dates[weekday].getMonth() + 1 > 9
-                          ? dates[weekday].getMonth() + 1
-                          : `0${dates[weekday].getMonth() + 1}`
-                      }-${
-                        dates[weekday].getDate() > 9
-                          ? dates[weekday].getDate()
-                          : `0${dates[weekday].getDate()}`
-                      }`
-                    ]
-                  }
-                />
-              ))}
-            </tr>
-          </tbody>
-        </table>
       </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Sunday</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {daysInWeek.map((weekday) => (
+              <WeekdayCard
+                mealSettings={props.mealSettings}
+                key={weekday}
+                date={dates[weekday]}
+                currentDate={currentDate}
+                setCurrentDate={props.setCurrentDate}
+                plans={
+                  props.plans[
+                    `${dates[weekday].getFullYear()}-${
+                      dates[weekday].getMonth() + 1 > 9
+                        ? dates[weekday].getMonth() + 1
+                        : `0${dates[weekday].getMonth() + 1}`
+                    }-${
+                      dates[weekday].getDate() > 9
+                        ? dates[weekday].getDate()
+                        : `0${dates[weekday].getDate()}`
+                    }`
+                  ]
+                }
+              />
+            ))}
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        *Due to restrictions on the number of API calls, please go to a single
+        day's view to see nutrition information.*
+      </p>
     </div>
   );
 };
@@ -139,12 +142,6 @@ export const WeekdayCard = (props) => {
     >
       <div className="day-num">
         <p>{props.date.getDate()}</p>
-      </div>
-      <div
-        className="total-cals"
-        // TODO need to have nutrients queried to total up day's cals
-      >
-        {dayNutrients.cals ? dayNutrients.cals : 0} cals
       </div>
       <div className="meals">
         {props.mealSettings.map((meal) => (
@@ -168,34 +165,19 @@ export const WeekdayCard = (props) => {
 
 export const WeeklyMeal = (props) => {
   return (
-    <Descriptions
-      title={
-        <Badge
-          color={props.color}
-          text={`${props.mealName} : ${
-            mealNutrients.cals ? mealNutrients.cals : 0
-            // TODO need to have queried food nutrition information for totalling meal cals
-          } cals`}
-        />
-      }
-      column={1}
-      size={"small"}
-      className={"meal"}
-    >
-      {/* {mealNutrients.cals ? ( */}
-      {props.plans ? (
-        props.plans.map((food) => (
-          <Descriptions.Item
-            key={food.foodId}
-            label={food.name}
-            // TODO need to have queried food nutrition information for food cals
-          >
-            XX cals
-          </Descriptions.Item>
-        ))
-      ) : (
-        <Descriptions.Item label={"No Foods"}>Add Some!</Descriptions.Item>
-      )}
-    </Descriptions>
+    <div className="meal">
+      <Badge color={props.color} text={props.mealName} />
+      <div className="foods">
+        {props.plans ? (
+          props.plans.map((food, index) => (
+            <p key={index} className="food">
+              {food.name}
+            </p>
+          ))
+        ) : (
+          <DashOutlined className="food" />
+        )}
+      </div>
+    </div>
   );
 };

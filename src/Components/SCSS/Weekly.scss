@@ -30,7 +30,13 @@ $lightred: rgba(248, 31, 7, 0.2);
     }
   }
 
+  table {
+    margin: 0 auto;
+    width: 100%;
+  }
+
   .weekday-card {
+    width: 14.29%;
     min-width: 125px;
     border: solid 2px black;
     padding: 0.15%;
@@ -40,24 +46,18 @@ $lightred: rgba(248, 31, 7, 0.2);
     }
 
     .day-num {
-      float: left;
       margin: 1%;
 
       p {
         border: black solid 1px;
         border-radius: 50%;
-        width: 2vw;
-        font-size: calc(12px + 0.7vw);
+        width: 1.5vw;
+        font-size: calc(8px + 0.5vw);
         font-weight: bold;
-        min-width: 20px;
-        min-height: 17px;
+        min-width: 13px;
+        min-height: 10px;
+        margin-bottom: 0;
       }
-    }
-
-    .total-cals {
-      display: inline;
-      font-weight: bold;
-      font-size: calc(12px + 0.7vw);
     }
 
     .meals {
@@ -65,18 +65,26 @@ $lightred: rgba(248, 31, 7, 0.2);
       margin-top: 2%;
       padding-top: 2%;
 
+      .ant-badge {
+        text-align: left;
+        display: block;
+        margin: 0.2%;
+      }
+
       .meal {
         margin: 1% 0;
         padding: 0% 2%;
-        border-top: solid 1px black;
 
-        .ant-descriptions-item-label {
-          font-size: calc(8px + 0.5vw);
-        }
+        .foods {
+          display: inline-flex;
+          flex-wrap: wrap;
+          justify-content: flex-start;
+          width: 100%;
 
-        .ant-descriptions-item-content {
-          text-align: right;
-          font-size: calc(8px + 0.5vw);
+          .food {
+            flex-grow: 1;
+            margin: 0.5%;
+          }
         }
       }
     }
