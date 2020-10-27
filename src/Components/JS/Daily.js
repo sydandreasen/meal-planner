@@ -7,10 +7,10 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { Tooltip, Badge, Table, InputNumber, Popconfirm } from "antd";
-import { dayNutrients, mealNutrients, foodNutrients } from "./Commons.js";
+import { dayNutrients, mealNutrients } from "./Commons.js";
 import "../SCSS/Daily.scss";
-import { XYPlot, LineSeries, XAxis, VerticalBarSeries } from "react-vis";
 import "../../../node_modules/react-vis/dist/style.css";
+import ProgressGraph from "./ProgressGraph.js";
 
 export const DailyMeal = (props) => {
   const [edit, setEdit] = useState(false);
@@ -38,14 +38,14 @@ export const DailyMeal = (props) => {
     },
     { title: "Calories", dataIndex: "calories", key: "calories" },
     {
-      title: "Expand",
+      title: "Expand", // TODO add action to expand and see multiple nutition informations for food item, similar to results of food search
       key: "expand",
       render: (cell, row) => (
         <ExpandAltOutlined style={{ color: "rgb(24, 144, 255)" }} />
       ),
     },
     {
-      title: "Remove",
+      title: "Remove", // TODO add ability to remove foods
       key: "remove",
       render: (cell, row) => (
         <Popconfirm
@@ -67,43 +67,11 @@ export const DailyMeal = (props) => {
         key: index,
         food: food.name,
         quantity: food.quantity,
-        calories: "XX",
+        calories: "XX", // TODO use API call results for individual food calories
         actions: "",
       });
     });
   }
-  // else {
-  //   foods = [
-  //     {
-  //       key: "1",
-  //       food: "Food 1",
-  //       quantity: foodNutrients.quantity ? foodNutrients.quantity : 0,
-  //       calories: foodNutrients.cals ? foodNutrients.cals : 0,
-  //       actions: "",
-  //     },
-  //     {
-  //       key: "2",
-  //       food: "Food 2",
-  //       quantity: foodNutrients.quantity ? foodNutrients.quantity : 0,
-  //       calories: foodNutrients.cals ? foodNutrients.cals : 0,
-  //       actions: "",
-  //     },
-  //     {
-  //       key: "3",
-  //       food: "Food 3",
-  //       quantity: foodNutrients.quantity ? foodNutrients.quantity : 0,
-  //       calories: foodNutrients.cals ? foodNutrients.cals : 0,
-  //       actions: "",
-  //     },
-  //     {
-  //       key: "4",
-  //       food: "Food 4",
-  //       quantity: foodNutrients.quantity ? foodNutrients.quantity : 0,
-  //       calories: foodNutrients.cals ? foodNutrients.cals : 0,
-  //       actions: "",
-  //     },
-  //   ];
-  // }
 
   return (
     <tr className="meal">
@@ -162,6 +130,17 @@ export const DailyCard = (props) => {
 
 export const Daily = (props) => {
   const currentDate = props.currentDate;
+  const dayPlan =
+    props.plans[
+      `${currentDate.getFullYear()}-${
+        currentDate.getMonth() + 1
+      }-${currentDate.getDate()}`
+    ];
+  // TODO gather day's nutrients with an API call for each individual food
+  // TODO figure out what kind of error occurs if too many calls are made and
+  // provide an error notification to the user in that case
+  // TODO use the API call results for day's total nutrients in DailyCard and in ProgressGraphs
+  // TODO use the API call results for individual meals' total nutrients within DailyCard
   const months = [
     "January",
     "February",
@@ -238,165 +217,17 @@ export const Daily = (props) => {
             ]
           }
         />
-        {/* FIXME; make charts use information daily planned nutrition */}
         <div className="progress">
           <h3>Planned Nutrition vs. Goal Nutrition</h3>
           <div className="progress-graphs">
-            <XYPlot
-              className="graph"
-              height={300}
-              width={100}
-              yDomain={[0, 2000]} // TODO, make all ydomains a function of the goal (slightly higher than 1*goal) or as high as the planned amount if exceeding goal
-            >
-              <VerticalBarSeries
-                data={[{ x: 1, y: 1200 }]}
-                color={
-                  1200 > props.goals.calories.amount
-                    ? "pink"
-                    : 1200 > 0.7 * props.goals.calories.amount
-                    ? "#ffb347"
-                    : "lightgreen"
-                }
-                animation
+            {Object.getOwnPropertyNames(props.goals).map((goal, index) => (
+              <ProgressGraph
+                key={index}
+                goal={props.goals[goal]}
+                measure={goal}
+                total={100} // FIXME make charts use information from daily planned nutrition
               />
-              <LineSeries
-                data={[
-                  { x: 0, y: props.goals.calories.amount },
-                  { x: 2, y: props.goals.calories.amount },
-                ]}
-                color="black"
-              />
-              <XAxis
-                tickFormat={() => "Calories"}
-                tickValues={[1]}
-                hideLine
-                tickSize={0}
-              />
-            </XYPlot>
-            <XYPlot
-              className="graph"
-              height={300}
-              width={100}
-              yDomain={[0, 200]}
-            >
-              <VerticalBarSeries
-                data={[{ x: 1, y: 100 }]}
-                color={
-                  100 > props.goals.carbohydrates.amount
-                    ? "pink"
-                    : 100 > 0.7 * props.goals.carbohydrates.amount
-                    ? "#ffb347"
-                    : "lightgreen"
-                } // FIXME don't hard code the values to determine color (all five graphs)
-                animation
-              />
-              <LineSeries
-                data={[
-                  { x: 0, y: props.goals.carbohydrates.amount },
-                  { x: 2, y: props.goals.carbohydrates.amount },
-                ]}
-                color="black"
-              />
-              <XAxis
-                tickFormat={() => "Carbohydrates"}
-                tickValues={[1]}
-                hideLine
-                tickSize={0}
-              />
-            </XYPlot>
-            <XYPlot
-              className="graph"
-              height={300}
-              width={100}
-              yDomain={[0, 200]}
-            >
-              <VerticalBarSeries
-                data={[{ x: 1, y: 40 }]}
-                color={
-                  40 > props.goals.protein.amount
-                    ? "pink"
-                    : 40 > 0.7 * props.goals.protein.amount
-                    ? "#ffb347"
-                    : "lightgreen"
-                }
-                animation
-              />
-              <LineSeries
-                data={[
-                  { x: 0, y: props.goals.protein.amount },
-                  { x: 2, y: props.goals.protein.amount },
-                ]}
-                color="black"
-              />
-              <XAxis
-                tickFormat={() => "Protein"}
-                tickValues={[1]}
-                hideLine
-                tickSize={0}
-              />
-            </XYPlot>
-            <XYPlot
-              className="graph"
-              height={300}
-              width={100}
-              yDomain={[0, 100]}
-            >
-              <VerticalBarSeries
-                data={[{ x: 1, y: 75 }]}
-                color={
-                  75 > props.goals.fat.amount
-                    ? "pink"
-                    : 75 > 0.7 * props.goals.fat.amount
-                    ? "#ffb347"
-                    : "lightgreen"
-                }
-                animation
-              />
-              <LineSeries
-                data={[
-                  { x: 0, y: props.goals.fat.amount },
-                  { x: 2, y: props.goals.fat.amount },
-                ]}
-                color="black"
-              />
-              <XAxis
-                tickFormat={() => "Fat"}
-                tickValues={[1]}
-                hideLine
-                tickSize={0}
-              />
-            </XYPlot>
-            <XYPlot
-              className="graph"
-              height={300}
-              width={100}
-              yDomain={[0, 100]}
-            >
-              <VerticalBarSeries
-                data={[{ x: 1, y: 45 }]}
-                color={
-                  45 > props.goals.sugar.amount
-                    ? "pink"
-                    : 45 > 0.7 * props.goals.sugar.amount
-                    ? "#ffb347"
-                    : "lightgreen"
-                }
-                animation
-              />
-              <LineSeries
-                data={[
-                  { x: 0, y: props.goals.sugar.amount },
-                  { x: 2, y: props.goals.sugar.amount },
-                ]}
-                color="black"
-              />
-              <XAxis
-                tickFormat={() => "Sugar"}
-                tickValues={[1]}
-                hideLine
-                tickSize={0}
-              />
-            </XYPlot>
+            ))}
           </div>
         </div>
       </div>

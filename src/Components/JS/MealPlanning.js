@@ -84,7 +84,7 @@ function MealPlanning(props) {
             <Button type="primary" onClick={() => setShowSearch(!showSearch)}>
               Add Food
             </Button>
-            <Button type="primary">Export Plan</Button>
+            {/* <Button type="primary">Export Plan</Button> */}
           </div>
           <div className="right-group">
             <Button type="primary" onClick={() => setCurrentDate(new Date())}>

@@ -249,7 +249,6 @@ export const Week = (props) => {
       weekCounter++;
     }
   }
-  console.log();
   return daysInWeek.map((dayObj) => (
     <DayCard
       mealSettings={props.mealSettings}
