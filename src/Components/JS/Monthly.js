@@ -1,12 +1,12 @@
 import React from "react";
-import { Descriptions, Tooltip, Badge } from "antd";
+import { Tooltip, Badge } from "antd";
 import {
   LeftOutlined,
   RightOutlined,
   DoubleRightOutlined,
   DoubleLeftOutlined,
+  DashOutlined,
 } from "@ant-design/icons";
-import { dayNutrients, mealNutrients } from "./Commons.js";
 import "../SCSS/Monthly.scss";
 
 export const Monthly = (props) => {
@@ -172,24 +172,30 @@ export const Monthly = (props) => {
           </tr>
         </tbody>
       </table>
+      <p>
+        *Due to restrictions on the number of API calls, please go to a single
+        day's view to see nutrition information.*
+      </p>
     </div>
   );
 };
 
 export const MonthlyMeal = (props) => {
-  let cals = 0;
-  // props.plans.forEach(food => {
-  // TODO need to set up query to get all food nutrients in MealPlanning.js in order to add up all cals in meal here
-  // })
-
   return (
-    <Descriptions title="" column={1} size={"small"} className={"meal"}>
-      <Descriptions.Item
-        label={<Badge color={props.color} text={props.mealName} />}
-      >
-        {mealNutrients.cals ? mealNutrients.cals : 0} cals
-      </Descriptions.Item>
-    </Descriptions>
+    <div>
+      <Badge color={props.color} text={props.mealName} />
+      <div className="foods">
+        {props.plans ? (
+          props.plans.map((food, index) => (
+            <p key={index} className="food">
+              {food.name}
+            </p>
+          ))
+        ) : (
+          <DashOutlined className="food" />
+        )}
+      </div>
+    </div>
   );
 };
 
@@ -210,12 +216,6 @@ export const DayCard = (props) => {
     >
       <div className="day-num">
         <p>{props.date.getDate()}</p>
-      </div>
-      <div
-        className="total-cals"
-        // TODO need to query nutrients to total up daily calories
-      >
-        Total : {dayNutrients.cals ? dayNutrients.cals : 0} cals
       </div>
       <div className="meals">
         {props.mealSettings.map((meal) => (

@@ -29,6 +29,10 @@ $lightred: rgba(248, 31, 7, 0.2);
     }
   }
 
+  table {
+    margin: 0 auto;
+  }
+
   .day-card {
     min-width: 125px;
     border: solid 1.5px black;
@@ -39,7 +43,7 @@ $lightred: rgba(248, 31, 7, 0.2);
     }
 
     .day-num {
-      float: left;
+      // float: left;
 
       p {
         border: black solid 1px;
@@ -49,19 +53,30 @@ $lightred: rgba(248, 31, 7, 0.2);
         font-weight: bold;
         min-width: 13px;
         min-height: 10px;
+        margin-bottom: 0;
       }
-    }
-
-    .total-cals {
-      display: inline;
-      font-weight: bold;
-      font-size: calc(8px + 0.5vw);
     }
 
     .meals {
       margin: 0.5%;
-      margin-top: 1.5%;
-      padding-top: 1.5%;
+
+      .ant-badge {
+        text-align: left;
+        display: block;
+        margin: 0.2%;
+      }
+
+      .foods {
+        display: inline-flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        width: 100%;
+
+        .food {
+          flex-grow: 1;
+          margin: 0.5%;
+        }
+      }
 
       .meal {
         margin: 1% 0;

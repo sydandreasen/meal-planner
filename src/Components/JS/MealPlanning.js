@@ -8,7 +8,7 @@ import {
   Descriptions,
   DatePicker,
 } from "antd";
-import { parseRequest, nutrientRequest } from "./Commons.js";
+import { parseRequest } from "./Commons.js";
 import "../SCSS/MealPlanning.scss";
 import { Monthly } from "./Monthly.js";
 import { Weekly } from "./Weekly.js";
@@ -65,13 +65,17 @@ function MealPlanning(props) {
   }, [props.uid, plansPathStr]);
 
   useEffect(() => {
+    // collect all nutrition information for plans
+  }, [props.uid, plansPathStr, plans]);
+
+  useEffect(() => {
     db.ref(settingsPathStr + "/goals").on("value", (snapshot) => {
       // listen to DB changes
       setGoals(snapshot.val());
     });
   }, [props.uid, settingsPathStr]);
 
-  if (view && view.length > 0) {
+  if (view && view.length > 0 && goals && goals.calories && plans) {
     return (
       <div className="planning-page">
         <h1>Welcome to your Meal Planning Dashboard</h1>
@@ -146,14 +150,13 @@ export const Search = (props) => {
   const [showFoodInfo, setShowFoodInfo] = useState(false);
   const [foodInfo, setFoodInfo] = useState([]);
   const [foodId, setFoodId] = useState("");
-  const [measureURI, setMeasureURI] = useState("");
   const [foodWord, setFoodWord] = useState("");
   const getFood = (searchStr) => {
     if (searchStr) {
       parseRequest(
         searchStr,
         (foodId) => setFoodId(foodId),
-        (measureURI) => setMeasureURI(measureURI),
+        (measureURI) => measureURI,
         (foodWord) => setFoodWord(foodWord),
         (foodInfo) => setFoodInfo(foodInfo)
       );

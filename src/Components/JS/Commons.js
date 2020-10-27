@@ -55,13 +55,13 @@ export const parseRequest = async (
   await axios
     .get(parserReq)
     .then(async (response) => {
-      foodWord = response.data.text;
       // find which measure is for serving
       for (let hint of response.data.hints) {
         for (let measure of hint.measures) {
           if (measure.label === "Serving") {
             measureURI = measure.uri;
             foodId = hint.food.foodId;
+            foodWord = hint.food.label;
             break;
           }
         }
@@ -79,7 +79,7 @@ export const parseRequest = async (
       setFoodWord(foodWord);
 
       // then find nutrients information
-      await nutrientRequest(foodId, measureURI, (foodInfo) =>
+      await nutrientRequest([foodId], [measureURI], (foodInfo) =>
         setFoodInfo(foodInfo)
       );
     })
@@ -87,21 +87,24 @@ export const parseRequest = async (
 };
 
 // make nutrients request from foodId and measurement URI
-export const nutrientRequest = async (foodId, measureURI, setFoodInfo) => {
+export const nutrientRequest = async (foodIds, measureURIs, setFoodInfo) => {
   const quantity = 1;
   let tempInfo = [];
+  let ingredients = [];
+  foodIds.forEach((id, index) => {
+    ingredients.push({
+      quantity: quantity,
+      measureURI: measureURIs[index],
+      foodId: id,
+    });
+  });
+
   // nutrients request
   await axios
     .post(
       `https://api.edamam.com/api/food-database/v2/nutrients?app_id=${process.env.REACT_APP_EDAMAM_APP_ID}&app_key=${process.env.REACT_APP_EDAMAM_APP_KEY}`,
       {
-        ingredients: [
-          {
-            quantity: quantity,
-            measureURI: measureURI,
-            foodId: foodId,
-          },
-        ],
+        ingredients: ingredients,
       }
     )
     .then((response) => {
