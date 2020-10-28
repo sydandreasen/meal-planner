@@ -85,7 +85,7 @@ export const parseRequest = async (
     })
     .catch(() =>
       alert(
-        "We failed to fetch food information. You may be operating too fast for us! This application is limited by a developer subscription to the Edamam API."
+        "We failed to fetch food information. You may be operating too fast for us! This application is limited by a developer subscription to the Edamam API. Specifically, only information for up to 6 foods can be requested at a time. You may need to reload the page. We apologize for any inconveniences."
       )
     );
 };
@@ -131,7 +131,7 @@ export const nutrientRequest = async (foodIds, measureURIs, setFoodInfo) => {
     })
     .catch(() =>
       alert(
-        "We failed to fetch nutrition information. You may be operating too fast for us! This application is limited by a developer subscription to the Edamam API."
+        "We failed to fetch nutrition information. You may be operating too fast for us! This application is limited by a developer subscription to the Edamam API. Specifically, only information for up to 6 foods can be requested at a time. You may need to reload the page. We apologize for any inconveniences."
       )
     );
 };

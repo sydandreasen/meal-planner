@@ -63,12 +63,35 @@ export const DailyMeal = (props) => {
   let foods = [];
   if (props.plans) {
     props.plans.forEach((food, index) => {
+      // find calories for the food
+      let cals = undefined;
+      food.info.forEach((info) => {
+        if (info.label === "Calories") {
+          cals = info.quantity;
+        }
+      });
       foods.push({
         key: index,
-        food: food.name,
+        food: food.food,
         quantity: food.quantity,
-        calories: "XX", // TODO use API call results for individual food calories
+        calories: cals, // TODO use API call results for individual food calories
         actions: "",
+      });
+    });
+  }
+
+  let mealCals = 0;
+  if (props.plans) {
+    console.log(props.plans[props.mealName]); // FIXME : why is this returning undefined??
+  }
+  if (props.plans && props.plans[props.mealName]) {
+    props.plans[props.mealName].forEach((food) => {
+      console.log(food);
+      food.info.forEach((info) => {
+        console.log(info);
+        if (info.label === "Calories") {
+          mealCals = info.quantity;
+        }
       });
     });
   }
@@ -78,9 +101,7 @@ export const DailyMeal = (props) => {
       <td>
         <Badge
           color={props.color}
-          text={`${props.mealName} : ${
-            mealNutrients.cals ? mealNutrients.cals : 0
-          } cals`}
+          text={`${props.mealName} : ${mealCals} cals`}
         />
 
         <Table
@@ -129,26 +150,47 @@ export const DailyCard = (props) => {
 };
 
 export const Daily = (props) => {
+  const [dayNutrients, setDayNutrients] = useState({});
+  console.log(dayNutrients);
   const currentDate = props.currentDate;
   const dayPlan =
     props.plans[
       `${currentDate.getFullYear()}-${
-        currentDate.getMonth() + 1
-      }-${currentDate.getDate()}`
+        currentDate.getMonth() + 1 > 9
+          ? currentDate.getMonth() + 1
+          : `0${currentDate.getMonth() + 1}`
+      }-${
+        currentDate.getDate() > 9
+          ? currentDate.getDate()
+          : `0${currentDate.getDate()}`
+      }`
     ];
-  if (dayPlan) {
+  // if day plans from DB found but the nutrients for those foods haven't been found:
+  if (dayPlan && Object.getOwnPropertyNames(dayNutrients).length === 0) {
     // find nutrients for all foods in each meal that's planned
     let mealNames = Object.getOwnPropertyNames(dayPlan);
     mealNames.forEach((name, mealIndex) => {
       let mealPlan = dayPlan[name];
       mealPlan.forEach((food, foodIndex) => {
-        console.log("finding information for", food.name);
         let servingURI =
           "http://www.edamam.com/ontologies/edamam.owl#Measure_serving";
         nutrientRequest(
           [food.foodId],
           [servingURI],
-          (foodInfo) => console.log("set food info:", foodInfo)
+          (foodInfo) => {
+            setDayNutrients((prevState) => {
+              let newNutr = { ...prevState };
+              if (!newNutr[name]) {
+                newNutr[name] = [];
+              }
+              newNutr[name].push({
+                food: food.name,
+                quantity: food.quantity,
+                info: foodInfo,
+              });
+              return newNutr;
+            });
+          }
           // TODO : edit this function here to keep track of this nutrition information as a part of the meal's plan as a part of the whole day's plan
           // Eventually also make sure quantity is correct based on how many servings planned
         );
@@ -219,17 +261,18 @@ export const Daily = (props) => {
           date={currentDate}
           mealSettings={props.mealSettings}
           plans={
-            props.plans[
-              `${currentDate.getFullYear()}-${
-                currentDate.getMonth() + 1 > 9
-                  ? currentDate.getMonth() + 1
-                  : `0${currentDate.getMonth() + 1}`
-              }-${
-                currentDate.getDate() > 9
-                  ? currentDate.getDate()
-                  : `0${currentDate.getDate()}`
-              }`
-            ]
+            dayNutrients
+            // props.plans[
+            //   `${currentDate.getFullYear()}-${
+            //     currentDate.getMonth() + 1 > 9
+            //       ? currentDate.getMonth() + 1
+            //       : `0${currentDate.getMonth() + 1}`
+            //   }-${
+            //     currentDate.getDate() > 9
+            //       ? currentDate.getDate()
+            //       : `0${currentDate.getDate()}`
+            //   }`
+            // ]
           }
         />
         <div className="progress">

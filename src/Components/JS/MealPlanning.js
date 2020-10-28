@@ -205,7 +205,7 @@ export const FoodInfo = (props) => {
           icon={
             showNutrients ? <PlusCircleOutlined /> : <MinusCircleOutlined />
           }
-          onClick={() => setShowNutrients(!showNutrients)}
+          onClick={() => setShowNutrients(!showNutrients)} // TODO : add check to see if there will be 6+ foods on that day, and if so, then alert that this could cause complications in getting nutrition information from API
         >
           Add to Plan
         </Button>
@@ -301,7 +301,7 @@ export const FoodInfo = (props) => {
                   quantity: add.quantity,
                   name: add.name,
                 });
-              }
+              } // TODO coordinate this function to also update the current day's planned nutrients in Daily component
               writeData(
                 props.plansPathStr + "/" + add.date + "/" + add.meal,
                 mealFoods
