@@ -63,10 +63,6 @@ function MealPlanning(props) {
   }, [props.uid, plansPathStr]);
 
   useEffect(() => {
-    // collect all nutrition information for plans
-  }, [props.uid, plansPathStr, plans]);
-
-  useEffect(() => {
     db.ref(settingsPathStr + "/goals").on("value", (snapshot) => {
       // listen to DB changes
       setGoals(snapshot.val());

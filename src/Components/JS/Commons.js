@@ -83,7 +83,11 @@ export const parseRequest = async (
         setFoodInfo(foodInfo)
       );
     })
-    .catch(() => console.error("Parser GET request failed."));
+    .catch(() =>
+      alert(
+        "We failed to fetch food information. You may be operating too fast for us! This application is limited by a developer subscription to the Edamam API."
+      )
+    );
 };
 
 // make nutrients request from foodId and measurement URI
@@ -97,7 +101,7 @@ export const nutrientRequest = async (foodIds, measureURIs, setFoodInfo) => {
       measureURI: measureURIs[index],
       foodId: id,
     });
-  });
+  }); // at least with free version, actually only one food allowed to search at once
 
   // nutrients request
   await axios
@@ -125,5 +129,9 @@ export const nutrientRequest = async (foodIds, measureURIs, setFoodInfo) => {
       });
       setFoodInfo(tempInfo);
     })
-    .catch(() => console.error("Nutrients POST request failed."));
+    .catch(() =>
+      alert(
+        "We failed to fetch nutrition information. You may be operating too fast for us! This application is limited by a developer subscription to the Edamam API."
+      )
+    );
 };

@@ -7,7 +7,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { Tooltip, Badge, Table, InputNumber, Popconfirm } from "antd";
-import { dayNutrients, mealNutrients } from "./Commons.js";
+import { dayNutrients, mealNutrients, nutrientRequest } from "./Commons.js";
 import "../SCSS/Daily.scss";
 import "../../../node_modules/react-vis/dist/style.css";
 import ProgressGraph from "./ProgressGraph.js";
@@ -136,11 +136,26 @@ export const Daily = (props) => {
         currentDate.getMonth() + 1
       }-${currentDate.getDate()}`
     ];
-  // TODO gather day's nutrients with an API call for each individual food
-  // TODO figure out what kind of error occurs if too many calls are made and
-  // provide an error notification to the user in that case
+  if (dayPlan) {
+    // find nutrients for all foods in each meal that's planned
+    let mealNames = Object.getOwnPropertyNames(dayPlan);
+    mealNames.forEach((name, mealIndex) => {
+      let mealPlan = dayPlan[name];
+      mealPlan.forEach((food, foodIndex) => {
+        console.log("finding information for", food.name);
+        let servingURI =
+          "http://www.edamam.com/ontologies/edamam.owl#Measure_serving";
+        nutrientRequest(
+          [food.foodId],
+          [servingURI],
+          (foodInfo) => console.log("set food info:", foodInfo)
+          // TODO : edit this function here to keep track of this nutrition information as a part of the meal's plan as a part of the whole day's plan
+          // Eventually also make sure quantity is correct based on how many servings planned
+        );
+      });
+    });
+  }
   // TODO use the API call results for day's total nutrients in DailyCard and in ProgressGraphs
-  // TODO use the API call results for individual meals' total nutrients within DailyCard
   const months = [
     "January",
     "February",
