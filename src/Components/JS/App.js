@@ -33,7 +33,7 @@ function App() {
   let message = loadingMessage();
 
   session(); // logout when session ends
-  useBeforeunload(() => localStorage.clear()); // clear data from local storage when tab/window closes
+  useBeforeunload(() => localStorage.clear()); // clear data from local storage when tab/window closes or refreshes
 
   return (
     <div className="App">

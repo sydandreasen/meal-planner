@@ -26,7 +26,6 @@ const { Option } = Select;
 
 function MealPlanning(props) {
   const [view, setView] = useState(""); // monthly/weekly/daily
-  // TODO put currentDate into localStorage too to maintain that on refresh as well
   const [currentDate, setCurrentDate] = useState(new Date()); // date selected
   const [showSearch, setShowSearch] = useState(false); // food search
   const [mealSettings, setMealSettings] = useState([]);
@@ -38,7 +37,6 @@ function MealPlanning(props) {
   useEffect(() => {
     db.ref(settingsPathStr + "/view").once("value", (snap) => {
       // listen to DB only once
-      // FIXME, doesn't stick on refresh, only sticking when switch to settings and come back
       if (
         localStorage.getItem("view") &&
         localStorage.getItem("view").length > 0
