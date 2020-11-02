@@ -71,7 +71,7 @@ export const parseRequest = async (
       }
       // alert if serving not available... could eventually be changed into defaulting to very first measurement available
       if (!foodId.length > 0) {
-        alert(`Unable to find serving information for ${search}.`);
+        alert(`Unable to find serving information for ${search}.`); // TODO : change to a 'notification'
       }
 
       setFoodId(foodId);
@@ -85,6 +85,7 @@ export const parseRequest = async (
     })
     .catch(() =>
       alert(
+        // TODO : change to a 'notification'
         "We failed to fetch food information. You may be operating too fast for us! This application is limited by a developer subscription to the Edamam API. Specifically, only information for up to 6 foods can be requested at a time. You may need to reload the page. We apologize for any inconveniences."
       )
     );
@@ -131,6 +132,7 @@ export const nutrientRequest = async (foodIds, measureURIs, setFoodInfo) => {
     })
     .catch(() =>
       alert(
+        // TODO : change to a 'notification'
         "We failed to fetch nutrition information. You may be operating too fast for us! This application is limited by a developer subscription to the Edamam API. Specifically, only information for up to 6 foods can be requested at a time. You may need to reload the page. We apologize for any inconveniences."
       )
     );

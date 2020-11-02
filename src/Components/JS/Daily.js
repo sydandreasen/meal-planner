@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   LeftOutlined,
   RightOutlined,
@@ -7,7 +7,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { Tooltip, Badge, Table, InputNumber, Popconfirm } from "antd";
-import { dayNutrients, mealNutrients, nutrientRequest } from "./Commons.js";
+import { nutrientRequest } from "./Commons.js";
 import "../SCSS/Daily.scss";
 import "../../../node_modules/react-vis/dist/style.css";
 import ProgressGraph from "./ProgressGraph.js";
@@ -74,24 +74,8 @@ export const DailyMeal = (props) => {
         key: index,
         food: food.food,
         quantity: food.quantity,
-        calories: cals, // TODO use API call results for individual food calories
+        calories: cals,
         actions: "",
-      });
-    });
-  }
-
-  let mealCals = 0;
-  if (props.plans) {
-    console.log(props.plans[props.mealName]); // FIXME : why is this returning undefined??
-  }
-  if (props.plans && props.plans[props.mealName]) {
-    props.plans[props.mealName].forEach((food) => {
-      console.log(food);
-      food.info.forEach((info) => {
-        console.log(info);
-        if (info.label === "Calories") {
-          mealCals = info.quantity;
-        }
       });
     });
   }
@@ -101,7 +85,9 @@ export const DailyMeal = (props) => {
       <td>
         <Badge
           color={props.color}
-          text={`${props.mealName} : ${mealCals} cals`}
+          text={`${props.mealName} : ${
+            props.mealCals ? props.mealCals : 0
+          } cals`}
         />
 
         <Table
@@ -116,16 +102,46 @@ export const DailyMeal = (props) => {
 };
 
 export const DailyCard = (props) => {
+  const [mealCals, setMealCals] = useState({});
+  const [dayCals, setDayCals] = useState(0);
+  // find the total calories for each meal
+  useEffect(() => {
+    let tempMealCals = {};
+    Object.getOwnPropertyNames(props.plans).forEach((mealName) => {
+      let meal = props.plans[mealName];
+      if (mealName !== "date") {
+        meal.forEach((food) => {
+          food.info.forEach((info) => {
+            if (info.label === "Calories") {
+              if (!tempMealCals[mealName]) {
+                tempMealCals[mealName] = info.quantity;
+              } else {
+                tempMealCals[mealName] += info.quantity;
+              }
+            }
+          });
+        });
+      }
+    });
+    setMealCals(tempMealCals);
+  }, [props.plans]);
+
+  // find the total calories for the whole day
+  useEffect(() => {
+    let tempSum = 0;
+    Object.getOwnPropertyNames(mealCals).forEach((mealName) => {
+      tempSum += mealCals[mealName];
+    });
+    setDayCals(tempSum);
+  }, [mealCals]);
   return (
     <div className="daily-card">
       <div className="day-num">
         <p>{props.date.getDate()}</p>{" "}
       </div>
-      <div
-        className="total-cals"
-        // TODO need to get data queried in order to total up the day's calories
-      >
-        {dayNutrients.cals ? dayNutrients.cals : 0} cals
+      <div className="total-cals">
+        {`${dayCals} `}
+        cals
       </div>
       <table className="meals">
         <tbody>
@@ -134,6 +150,7 @@ export const DailyCard = (props) => {
               color={meal.color}
               mealName={meal.name}
               key={meal.key}
+              mealCals={mealCals[meal.name]}
               plans={
                 props.plans // if the plans already have the date, try to return the meal-specific plans, otherwise return undefined, as plans without the date returns undefined anyway
                   ? props.plans[
@@ -151,7 +168,7 @@ export const DailyCard = (props) => {
 
 export const Daily = (props) => {
   const [dayNutrients, setDayNutrients] = useState({});
-  console.log(dayNutrients);
+  const [dayTotals, setDayTotals] = useState({});
   const currentDate = props.currentDate;
   const dayPlan =
     props.plans[
@@ -165,39 +182,81 @@ export const Daily = (props) => {
           : `0${currentDate.getDate()}`
       }`
     ];
-  // if day plans from DB found but the nutrients for those foods haven't been found:
-  if (dayPlan && Object.getOwnPropertyNames(dayNutrients).length === 0) {
-    // find nutrients for all foods in each meal that's planned
-    let mealNames = Object.getOwnPropertyNames(dayPlan);
-    mealNames.forEach((name, mealIndex) => {
-      let mealPlan = dayPlan[name];
-      mealPlan.forEach((food, foodIndex) => {
-        let servingURI =
-          "http://www.edamam.com/ontologies/edamam.owl#Measure_serving";
-        nutrientRequest(
-          [food.foodId],
-          [servingURI],
-          (foodInfo) => {
+
+  // find day totals for all nutrition categories that have goals
+  useEffect(() => {
+    let goals = Object.getOwnPropertyNames(props.goals);
+    goals.forEach((goal) => {
+      // ensure won't be case-sensitive below
+      goal = goal.toLowerCase();
+    });
+    let tempDayTotals = {};
+    Object.getOwnPropertyNames(dayNutrients).forEach((mealName) => {
+      let meal = dayNutrients[mealName];
+      if (mealName !== "date") {
+        meal.forEach((food) => {
+          food.info.forEach((info) => {
+            // note that sugar is sugars in API info and carbohydrates is carbs in API info
+            let label = info.label.toLowerCase();
+            if (label === "carbs") {
+              label = "carbohydrates";
+            } else if (label === "sugars") {
+              label = "sugar";
+            }
+            // find matches between goals and info
+            let idx = goals.indexOf(label);
+            if (idx !== -1) {
+              let match = goals[idx];
+              if (!tempDayTotals[match]) {
+                tempDayTotals[match] = info.quantity;
+              } else {
+                tempDayTotals[match] += info.quantity;
+              }
+            }
+          });
+        });
+      }
+    });
+    setDayTotals(tempDayTotals);
+  }, [dayNutrients, props.goals]);
+
+  // when finding a new currentDate, call for and keep track of nutrition info
+  useEffect(() => {
+    if (dayPlan) {
+      // find nutrients for all foods in each meal that's planned
+      let mealNames = Object.getOwnPropertyNames(dayPlan);
+      mealNames.forEach((name, mealIndex) => {
+        let mealPlan = dayPlan[name];
+        mealPlan.forEach((food, foodIndex) => {
+          let servingURI =
+            "http://www.edamam.com/ontologies/edamam.owl#Measure_serving";
+          nutrientRequest([food.foodId], [servingURI], (foodInfo) => {
             setDayNutrients((prevState) => {
-              let newNutr = { ...prevState };
+              let newNutr = { ...prevState }; // for building onto list of other foods (same day)
+              if (newNutr.date !== currentDate) {
+                // needing to reset then grab food (switched day)
+                newNutr = {};
+              }
               if (!newNutr[name]) {
                 newNutr[name] = [];
               }
+              newNutr.date = currentDate; // to keep track of whether or not dayNutrients should build or first reset
               newNutr[name].push({
                 food: food.name,
-                quantity: food.quantity,
+                quantity: food.quantity, // TODO : make sure quantity is correct based on how many servings planned
                 info: foodInfo,
               });
               return newNutr;
             });
-          }
-          // TODO : edit this function here to keep track of this nutrition information as a part of the meal's plan as a part of the whole day's plan
-          // Eventually also make sure quantity is correct based on how many servings planned
-        );
+          });
+        });
       });
-    });
-  }
-  // TODO use the API call results for day's total nutrients in DailyCard and in ProgressGraphs
+    } else {
+      // dayPlan is undefined, no plans for day --> make no nutrients for day
+      setDayNutrients({});
+    }
+  }, [currentDate, dayPlan]);
+
   const months = [
     "January",
     "February",
@@ -260,20 +319,7 @@ export const Daily = (props) => {
         <DailyCard
           date={currentDate}
           mealSettings={props.mealSettings}
-          plans={
-            dayNutrients
-            // props.plans[
-            //   `${currentDate.getFullYear()}-${
-            //     currentDate.getMonth() + 1 > 9
-            //       ? currentDate.getMonth() + 1
-            //       : `0${currentDate.getMonth() + 1}`
-            //   }-${
-            //     currentDate.getDate() > 9
-            //       ? currentDate.getDate()
-            //       : `0${currentDate.getDate()}`
-            //   }`
-            // ]
-          }
+          plans={dayNutrients}
         />
         <div className="progress">
           <h3>Planned Nutrition vs. Goal Nutrition</h3>
@@ -283,7 +329,7 @@ export const Daily = (props) => {
                 key={index}
                 goal={props.goals[goal]}
                 measure={goal}
-                total={100} // FIXME make charts use information from daily planned nutrition
+                total={dayTotals}
               />
             ))}
           </div>
