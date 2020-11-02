@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import ReactNotification from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 import NavMenu from "./NavMenu.js";
 import MealPlanning from "./MealPlanning.js";
 // import Recipes from "./Recipes.js";
@@ -29,6 +31,7 @@ function Dashboard(props) {
 
   return (
     <div>
+      <ReactNotification />
       <NavMenu
         page={(showPage) => {
           setPage(showPage);

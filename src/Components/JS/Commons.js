@@ -1,4 +1,5 @@
 import axios from "axios";
+import { store } from "react-notifications-component";
 
 export const loadingMessage = () => {
   const options = [
@@ -71,7 +72,19 @@ export const parseRequest = async (
       }
       // alert if serving not available... could eventually be changed into defaulting to very first measurement available
       if (!foodId.length > 0) {
-        alert(`Unable to find serving information for ${search}.`); // TODO : change to a 'notification'
+        store.addNotification({
+          title: "Error!",
+          message: `Unable to find serving information for ${search}.`,
+          type: "warning",
+          insert: "top",
+          container: "top-right",
+          animationIn: ["animate__animated", "animate__fadeIn"],
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          dismiss: {
+            duration: 10000,
+            onScreen: true,
+          },
+        });
       }
 
       setFoodId(foodId);
@@ -84,10 +97,20 @@ export const parseRequest = async (
       );
     })
     .catch(() =>
-      alert(
-        // TODO : change to a 'notification'
-        "We failed to fetch food information. You may be operating too fast for us! This application is limited by a developer subscription to the Edamam API. Specifically, only information for up to 6 foods can be requested at a time. You may need to reload the page. We apologize for any inconveniences."
-      )
+      store.addNotification({
+        title: "Error!",
+        message:
+          "We failed to fetch food information. You may be operating too fast for us! This application is limited by a developer subscription to the Edamam API. Specifically, only information for up to 6 foods can be requested at a time. You may need to reload the page. We apologize for any inconveniences.",
+        type: "warning",
+        insert: "top",
+        container: "top-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 10000,
+          onScreen: true,
+        },
+      })
     );
 };
 
@@ -131,9 +154,19 @@ export const nutrientRequest = async (foodIds, measureURIs, setFoodInfo) => {
       setFoodInfo(tempInfo);
     })
     .catch(() =>
-      alert(
-        // TODO : change to a 'notification'
-        "We failed to fetch nutrition information. You may be operating too fast for us! This application is limited by a developer subscription to the Edamam API. Specifically, only information for up to 6 foods can be requested at a time. You may need to reload the page. We apologize for any inconveniences."
-      )
+      store.addNotification({
+        title: "Error!",
+        message:
+          "We failed to fetch nutrition information. You may be operating too fast for us! This application is limited by a developer subscription to the Edamam API. Specifically, only information for up to 6 foods can be requested at a time. You may need to reload the page. We apologize for any inconveniences.",
+        type: "warning",
+        insert: "top",
+        container: "top-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 10000,
+          onScreen: true,
+        },
+      })
     );
 };
