@@ -258,17 +258,19 @@ export const Week = (props) => {
       inCurrentMonth={dayObj.inCurrentMonth}
       setCurrentDate={props.setCurrentDate}
       plans={
-        props.plans[
-          `${dayObj.date.getFullYear()}-${
-            dayObj.date.getMonth() + 1 > 9
-              ? dayObj.date.getMonth() + 1
-              : `0${dayObj.date.getMonth() + 1}`
-          }-${
-            dayObj.date.getDate() > 9
-              ? dayObj.date.getDate()
-              : `0${dayObj.date.getDate()}`
-          }`
-        ]
+        props.plans
+          ? props.plans[
+              `${dayObj.date.getFullYear()}-${
+                dayObj.date.getMonth() + 1 > 9
+                  ? dayObj.date.getMonth() + 1
+                  : `0${dayObj.date.getMonth() + 1}`
+              }-${
+                dayObj.date.getDate() > 9
+                  ? dayObj.date.getDate()
+                  : `0${dayObj.date.getDate()}`
+              }`
+            ]
+          : {}
       }
     />
   ));

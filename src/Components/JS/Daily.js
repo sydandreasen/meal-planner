@@ -288,18 +288,19 @@ export const Daily = (props) => {
         : `0${currentDate.getDate()}`
     }` +
     "/";
-  const dayPlan =
-    props.plans[
-      `${currentDate.getFullYear()}-${
-        currentDate.getMonth() + 1 > 9
-          ? currentDate.getMonth() + 1
-          : `0${currentDate.getMonth() + 1}`
-      }-${
-        currentDate.getDate() > 9
-          ? currentDate.getDate()
-          : `0${currentDate.getDate()}`
-      }`
-    ];
+  const dayPlan = props.plans
+    ? props.plans[
+        `${currentDate.getFullYear()}-${
+          currentDate.getMonth() + 1 > 9
+            ? currentDate.getMonth() + 1
+            : `0${currentDate.getMonth() + 1}`
+        }-${
+          currentDate.getDate() > 9
+            ? currentDate.getDate()
+            : `0${currentDate.getDate()}`
+        }`
+      ]
+    : {};
 
   // find day totals for all nutrition categories that have goals
   useEffect(() => {

@@ -104,17 +104,19 @@ export const Weekly = (props) => {
                 currentDate={currentDate}
                 setCurrentDate={props.setCurrentDate}
                 plans={
-                  props.plans[
-                    `${dates[weekday].getFullYear()}-${
-                      dates[weekday].getMonth() + 1 > 9
-                        ? dates[weekday].getMonth() + 1
-                        : `0${dates[weekday].getMonth() + 1}`
-                    }-${
-                      dates[weekday].getDate() > 9
-                        ? dates[weekday].getDate()
-                        : `0${dates[weekday].getDate()}`
-                    }`
-                  ]
+                  props.plans
+                    ? props.plans[
+                        `${dates[weekday].getFullYear()}-${
+                          dates[weekday].getMonth() + 1 > 9
+                            ? dates[weekday].getMonth() + 1
+                            : `0${dates[weekday].getMonth() + 1}`
+                        }-${
+                          dates[weekday].getDate() > 9
+                            ? dates[weekday].getDate()
+                            : `0${dates[weekday].getDate()}`
+                        }`
+                      ]
+                    : {}
                 }
               />
             ))}

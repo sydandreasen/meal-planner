@@ -33,7 +33,7 @@ function MealPlanning(props) {
   const [mealSettings, setMealSettings] = useState([]);
   const settingsPathStr = "users/" + props.uid + "/settings";
   const plansPathStr = "users/" + props.uid + "/plans";
-  const [plans, setPlans] = useState([]);
+  const [plans, setPlans] = useState([{}]);
   const [goals, setGoals] = useState([]);
 
   useEffect(() => {
@@ -71,7 +71,7 @@ function MealPlanning(props) {
     });
   }, [props.uid, settingsPathStr]);
 
-  if (view && view.length > 0 && goals && goals.calories && plans) {
+  if (view && view.length > 0 && goals && goals.calories) {
     return (
       <div className="planning-page">
         <h1>Welcome to your Meal Planning Dashboard</h1>
