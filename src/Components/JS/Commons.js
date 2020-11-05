@@ -100,7 +100,7 @@ export const parseRequest = async (
       store.addNotification({
         title: "Error!",
         message:
-          "We failed to fetch food information. You may be operating too fast for us! This application is limited by a developer subscription to the Edamam API. Specifically, only information for up to 6 foods can be requested at a time. You may need to reload the page. We apologize for any inconveniences.",
+          "We failed to fetch food information. You may be operating too fast for us! This application is limited by a developer subscription to the Edamam API. Specifically, only information for up to 6 foods can be requested at a time. You may need to wait a minute or reload the page. We apologize for any inconveniences.",
         type: "warning",
         insert: "top",
         container: "top-right",
@@ -157,7 +157,7 @@ export const nutrientRequest = async (foodIds, measureURIs, setFoodInfo) => {
       store.addNotification({
         title: "Error!",
         message:
-          "We failed to fetch nutrition information. You may be operating too fast for us! This application is limited by a developer subscription to the Edamam API. Specifically, only information for up to 6 foods can be requested at a time. You may need to reload the page. We apologize for any inconveniences.",
+          "We failed to fetch nutrition information. You may be operating too fast for us! This application is limited by a developer subscription to the Edamam API. Specifically, only information for up to 6 foods can be requested at a time. You may need to wait a minute or reload the page. We apologize for any inconveniences.",
         type: "warning",
         insert: "top",
         container: "top-right",
