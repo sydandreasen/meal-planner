@@ -20,7 +20,7 @@ const ProgressGraph = (props) => {
   useEffect(() => {
     setData([
       {
-        nutrient: props.measure,
+        nutrient: `${props.measure} (${props.goal.unit})`,
         planned: props.total[props.measure],
         goal: props.goal.amount,
       },
@@ -29,26 +29,44 @@ const ProgressGraph = (props) => {
 
   useEffect(() => {
     setColor(
-      props.total > props.goal.amount
+      props.total[props.measure] > props.goal.amount
         ? "pink"
-        : props.total > 0.7 * props.goal.amount
+        : props.total[props.measure] > 0.7 * props.goal.amount
         ? "#ffb347" // light orange color
         : "lightgreen"
     );
   }, [props.measure, props.total, props.goal]);
+
   return (
     <ComposedChart width={150} height={300} data={data}>
       <XAxis dataKey="nutrient" />
       <YAxis
-        // label={props.goal.unit}
         domain={[
           0,
-          props.total > props.goal.amount
-            ? props.total
-            : 1.2 * props.goal.amount,
+          props.total[props.measure] > props.goal.amount
+            ? Math.ceil(props.total[props.measure] / 10) * 10
+            : Math.ceil((1.2 * props.goal.amount) / 10) * 10,
         ]}
+        ticks={
+          // evenly space out intervals so that there are five ticks no matter the y max
+          props.total[props.measure] > props.goal.amount
+            ? [
+                0,
+                (Math.ceil(props.total[props.measure] / 10) * 10) / 4,
+                (Math.ceil(props.total[props.measure] / 10) * 10) / 2,
+                (Math.ceil(props.total[props.measure] / 10) * 10 * 3) / 4,
+                Math.ceil(props.total[props.measure] / 10) * 10,
+              ]
+            : [
+                0,
+                (Math.ceil((1.2 * props.goal.amount) / 10) * 10) / 4,
+                (Math.ceil((1.2 * props.goal.amount) / 10) * 10) / 2,
+                (Math.ceil((1.2 * props.goal.amount) / 10) * 10 * 3) / 4,
+                Math.ceil((1.2 * props.goal.amount) / 10) * 10,
+              ]
+        }
       />
-      <Legend />
+      <Legend verticalAlgin={"bottom"} iconSize={10} align={"right"} />
       <Bar dataKey="planned" barSize={20} fill={color} />
       <Bar dataKey="goal" barSize={20} fill="#708090" />
     </ComposedChart>

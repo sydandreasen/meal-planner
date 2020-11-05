@@ -7,6 +7,7 @@ import {
   Modal,
   Descriptions,
   DatePicker,
+  Spin,
 } from "antd";
 import { parseRequest } from "./Commons.js";
 import "../SCSS/MealPlanning.scss";
@@ -20,6 +21,7 @@ import {
 } from "@ant-design/icons";
 import base from "./Firebase.js";
 import { writeData } from "./DbHandler.js";
+import moment from "moment";
 const db = base.database();
 
 const { Option } = Select;
@@ -104,6 +106,7 @@ function MealPlanning(props) {
           mealSettings={mealSettings}
           plansPathStr={plansPathStr}
           plans={plans}
+          currentDate={currentDate}
         />
         <div className="calendar">
           {view === "monthly" ? (
@@ -184,6 +187,7 @@ export const Search = (props) => {
           food={{ word: foodWord, id: foodId }} // word and id
           nutrients={foodInfo}
           mealSettings={props.mealSettings}
+          currentDate={props.currentDate}
         />
       ) : (
         ""
@@ -205,31 +209,36 @@ export const FoodInfo = (props) => {
           icon={
             showNutrients ? <PlusCircleOutlined /> : <MinusCircleOutlined />
           }
-          onClick={() => setShowNutrients(!showNutrients)} // TODO : add check to see if there will be 6+ foods on that day, and if so, then alert that this could cause complications in getting nutrition information from API
+          onClick={() => setShowNutrients(!showNutrients)}
         >
           Add to Plan
         </Button>
       </div>
       {showNutrients ? (
-        <Descriptions
-          bordered
-          column={1}
-          size={"small"}
-          className={"food-info"}
-        >
-          {props.nutrients.map((nutrient, index) => (
-            <Descriptions.Item
-              key={index}
-              label={`${nutrient.label} (${nutrient.unit})`}
-            >
-              {nutrient.quantity.toFixed(2)}
-            </Descriptions.Item>
-          ))}
-        </Descriptions>
+        props.nutrients.length === 0 ? (
+          <Spin size="large" />
+        ) : (
+          <Descriptions
+            bordered
+            column={1}
+            size={"small"}
+            className={"food-info"}
+          >
+            {props.nutrients.map((nutrient, index) => (
+              <Descriptions.Item
+                key={index}
+                label={`${nutrient.label} (${nutrient.unit})`}
+              >
+                {nutrient.quantity.toFixed(2)}
+              </Descriptions.Item>
+            ))}
+          </Descriptions>
+        )
       ) : (
         <div className="add-food">
           <DatePicker
             placeholder="Select a date to plan this food"
+            defaultValue={moment(props.currentDate)}
             onChange={(date, dateString) => {
               setAddFood((prevState) => {
                 return { ...prevState, date: dateString };
@@ -238,6 +247,7 @@ export const FoodInfo = (props) => {
           />
           <Select
             placeholder="Select a meal to plan this food"
+            defaultValue={props.mealSettings[0].name}
             onChange={(selection) => {
               setAddFood((prevState) => {
                 return { ...prevState, meal: selection };
@@ -278,6 +288,23 @@ export const FoodInfo = (props) => {
                 // wasn't defined, left as default value of one
                 add.quantity = 1;
               }
+              if (!add.date) {
+                // wasn't defined, left as default value of current date
+                let str = `${props.currentDate.getFullYear()}-${
+                  props.currentDate.getMonth() + 1 > 9
+                    ? props.currentDate.getMonth() + 1
+                    : `0${props.currentDate.getMonth() + 1}`
+                }-${
+                  props.currentDate.getDate() > 9
+                    ? props.currentDate.getDate()
+                    : `0${props.currentDate.getDate()}`
+                }`;
+                add.date = str;
+              }
+              if (!add.meal) {
+                // wasn't defined, left as default value of first meal
+                add.meal = props.mealSettings[0].name;
+              }
               let mealFoods =
                 props.plans &&
                 props.plans[add.date] &&
@@ -301,7 +328,7 @@ export const FoodInfo = (props) => {
                   quantity: add.quantity,
                   name: add.name,
                 });
-              } // TODO coordinate this function to also update the current day's planned nutrients in Daily component
+              }
               writeData(
                 props.plansPathStr + "/" + add.date + "/" + add.meal,
                 mealFoods

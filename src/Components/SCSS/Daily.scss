@@ -134,6 +134,10 @@ $lightred: rgba(248, 31, 7, 0.2);
         display: inline-flex;
         padding-right: 3.5%;
         box-shadow: 4px 6px lightgray;
+
+        .recharts-legend-wrapper {
+          line-height: 1.5;
+        }
       }
     }
   }

@@ -53,6 +53,10 @@ export const DailyMeal = (props) => {
           icon={<DeleteOutlined style={{ color: "rgb(248, 31, 7)" }} />}
           okText="Yes"
           cancelText="No"
+          onConfirm={() => {
+            console.log(row);
+            console.log(props.mealPathStr);
+          }}
         >
           <DeleteOutlined style={{ color: "rgb(248, 31, 7)" }} />
         </Popconfirm>
@@ -76,6 +80,7 @@ export const DailyMeal = (props) => {
         quantity: food.quantity,
         calories: cals,
         actions: "",
+        id: food.id,
       });
     });
   }
@@ -151,6 +156,7 @@ export const DailyCard = (props) => {
               mealName={meal.name}
               key={meal.key}
               mealCals={mealCals[meal.name]}
+              mealPathStr={props.dayPathStr + meal.name}
               plans={
                 props.plans // if the plans already have the date, try to return the meal-specific plans, otherwise return undefined, as plans without the date returns undefined anyway
                   ? props.plans[
@@ -170,6 +176,20 @@ export const Daily = (props) => {
   const [dayNutrients, setDayNutrients] = useState({});
   const [dayTotals, setDayTotals] = useState({});
   const currentDate = props.currentDate;
+  console.log("Plans path str", props.plansPathStr);
+  let dayPathStr =
+    props.plansPathStr + // FIXME first part returning undefined in daily meal component
+    "/" +
+    `${currentDate.getFullYear()}-${
+      currentDate.getMonth() + 1 > 9
+        ? currentDate.getMonth() + 1
+        : `0${currentDate.getMonth() + 1}`
+    }-${
+      currentDate.getDate() > 9
+        ? currentDate.getDate()
+        : `0${currentDate.getDate()}`
+    }` +
+    "/";
   const dayPlan =
     props.plans[
       `${currentDate.getFullYear()}-${
@@ -241,11 +261,36 @@ export const Daily = (props) => {
                 newNutr[name] = [];
               }
               newNutr.date = currentDate; // to keep track of whether or not dayNutrients should build or first reset
-              newNutr[name].push({
-                food: food.name,
-                quantity: food.quantity, // TODO : make sure quantity is correct based on how many servings planned
-                info: foodInfo,
-              });
+              // check if food id is already included in the nutrient plan
+              // if so, just check quantity, otherwise, push a new food
+              let foodIds = [];
+              newNutr[name].forEach((food) => foodIds.push(food.id));
+              if (foodIds.indexOf(food.foodId) === -1) {
+                // this food is not already within the plan
+                // if quantity > 1, must recompute foodInfo before pushing
+                let foodNutrients = foodInfo;
+                if (food.quantity > 1) {
+                  foodNutrients.forEach((nutrient) => {
+                    nutrient.quantity *= food.quantity;
+                  });
+                }
+                newNutr[name].push({
+                  food: food.name,
+                  quantity: food.quantity,
+                  info: foodNutrients,
+                  id: food.foodId,
+                });
+              } else if (
+                newNutr[name][foodIds.indexOf(food.foodId)].quantity !==
+                food.quantity
+              ) {
+                // this food is already within the plan, adjust if quantity is being changed, otherwise leave alone (correct in newNutr)
+                let idx = foodIds.indexOf(food.foodId);
+                newNutr[name][idx].quantity = food.quantity;
+                newNutr[name][idx].info.forEach(
+                  (nutrient) => (nutrient.quantity *= food.quantity)
+                );
+              }
               return newNutr;
             });
           });
@@ -320,6 +365,7 @@ export const Daily = (props) => {
           date={currentDate}
           mealSettings={props.mealSettings}
           plans={dayNutrients}
+          dayPathStr={dayPathStr}
         />
         <div className="progress">
           <h3>Planned Nutrition vs. Goal Nutrition</h3>
