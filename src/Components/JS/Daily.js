@@ -5,16 +5,25 @@ import {
   ExpandAltOutlined,
   CheckSquareOutlined,
   DeleteOutlined,
+  CloseCircleOutlined,
 } from "@ant-design/icons";
-import { Tooltip, Badge, Table, InputNumber, Popconfirm } from "antd";
+import {
+  Tooltip,
+  Badge,
+  Table,
+  InputNumber,
+  Popconfirm,
+  Modal,
+  Descriptions,
+} from "antd";
 import { nutrientRequest } from "./Commons.js";
 import "../SCSS/Daily.scss";
-import "../../../node_modules/react-vis/dist/style.css";
+import { writeData } from "./DbHandler.js";
 import ProgressGraph from "./ProgressGraph.js";
 
 export const DailyMeal = (props) => {
   const [edit, setEdit] = useState(false);
-
+  const [expandKey, setExpandKey] = useState("");
   const columns = [
     { title: "Food", dataIndex: "food", key: "food" },
     {
@@ -24,7 +33,44 @@ export const DailyMeal = (props) => {
       render: (cell, row) =>
         edit ? (
           <div>
-            <InputNumber defaultValue={cell} size="middle" />
+            <InputNumber
+              defaultValue={cell}
+              size="middle"
+              onChange={(value) => {
+                // find array in plans, change the food with the food id and write data to props.mealPathStr
+                let newPlans = [];
+                props.plans.forEach((food) => {
+                  if (food.id !== row.id) {
+                    newPlans.push({
+                      foodId: food.id,
+                      name: food.food,
+                      quantity: food.quantity,
+                    });
+                  } else {
+                    newPlans.push({
+                      foodId: food.id,
+                      name: food.food,
+                      quantity: value,
+                    });
+                  }
+                });
+                writeData(props.mealPathStr, newPlans);
+                let newDayNutrients = { ...props.dayNutrients };
+                let editIdx = -1;
+                newDayNutrients[props.mealName].forEach((food, index) => {
+                  if (food.id === row.id) {
+                    editIdx = index;
+                  }
+                });
+                // edit quantity and corresponding nutrient quantities in props.dayNutrients
+                newDayNutrients[props.mealName][editIdx].info.forEach(
+                  (info) =>
+                    (info.quantity *=
+                      value / newDayNutrients[props.mealName][editIdx].quantity)
+                );
+                newDayNutrients[props.mealName][editIdx].quantity = value;
+              }}
+            />
             <CheckSquareOutlined
               style={{ color: "rgb(59, 162, 81)" }}
               onClick={() => setEdit(false)}
@@ -38,14 +84,48 @@ export const DailyMeal = (props) => {
     },
     { title: "Calories", dataIndex: "calories", key: "calories" },
     {
-      title: "Expand", // TODO add action to expand and see multiple nutition informations for food item, similar to results of food search
+      title: "Expand",
       key: "expand",
-      render: (cell, row) => (
-        <ExpandAltOutlined style={{ color: "rgb(24, 144, 255)" }} />
-      ),
+      render: (cell, row) =>
+        expandKey === row.id ? (
+          <Modal
+            footer={<div></div>}
+            className="food-expanded"
+            visible={expandKey === row.id}
+            onCancel={() => setExpandKey("")}
+            centered={true}
+            closeIcon={<CloseCircleOutlined />}
+            title={`Planned Nutrition Info for ${row.food} (${row.quantity} ${
+              row.quantity > 1 ? `Servings` : `Serving`
+            })`}
+          >
+            <Descriptions
+              bordered
+              column={1}
+              size={"small"}
+              className={"food-info"}
+            >
+              {props.dayNutrients[props.mealName][row.key].info.map(
+                (nutrient, index) => (
+                  <Descriptions.Item
+                    key={index}
+                    label={`${nutrient.label} (${nutrient.unit})`}
+                  >
+                    {nutrient.quantity.toFixed(2)}
+                  </Descriptions.Item>
+                )
+              )}
+            </Descriptions>
+          </Modal>
+        ) : (
+          <ExpandAltOutlined
+            style={{ color: "rgb(24, 144, 255)" }}
+            onClick={() => setExpandKey(row.id)}
+          />
+        ),
     },
     {
-      title: "Remove", // TODO add ability to remove foods
+      title: "Remove",
       key: "remove",
       render: (cell, row) => (
         <Popconfirm
@@ -54,8 +134,26 @@ export const DailyMeal = (props) => {
           okText="Yes"
           cancelText="No"
           onConfirm={() => {
-            console.log(row);
-            console.log(props.mealPathStr);
+            // find array in plans, remove the food with the food id and write data to props.mealPathStr
+            let newPlans = [];
+            props.plans.forEach((food) => {
+              if (food.id !== row.id) {
+                newPlans.push({
+                  foodId: food.id,
+                  name: food.food,
+                  quantity: food.quantity,
+                });
+              }
+            });
+            writeData(props.mealPathStr, newPlans);
+            let newDayNutrients = { ...props.dayNutrients };
+            let removeIdx = -1;
+            newDayNutrients[props.mealName].forEach((food, index) => {
+              if (food.id === row.id) {
+                removeIdx = index;
+              }
+            });
+            newDayNutrients[props.mealName].splice(removeIdx);
           }}
         >
           <DeleteOutlined style={{ color: "rgb(248, 31, 7)" }} />
@@ -164,6 +262,7 @@ export const DailyCard = (props) => {
                     ]
                   : undefined
               }
+              dayNutrients={props.dayNutrients}
             />
           ))}
         </tbody>
@@ -176,9 +275,8 @@ export const Daily = (props) => {
   const [dayNutrients, setDayNutrients] = useState({});
   const [dayTotals, setDayTotals] = useState({});
   const currentDate = props.currentDate;
-  console.log("Plans path str", props.plansPathStr);
   let dayPathStr =
-    props.plansPathStr + // FIXME first part returning undefined in daily meal component
+    props.plansPathStr +
     "/" +
     `${currentDate.getFullYear()}-${
       currentDate.getMonth() + 1 > 9
@@ -366,6 +464,7 @@ export const Daily = (props) => {
           mealSettings={props.mealSettings}
           plans={dayNutrients}
           dayPathStr={dayPathStr}
+          dayNutrients={dayNutrients}
         />
         <div className="progress">
           <h3>Planned Nutrition vs. Goal Nutrition</h3>

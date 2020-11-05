@@ -130,6 +130,7 @@ function MealPlanning(props) {
               mealSettings={mealSettings}
               plans={plans}
               goals={goals}
+              plansPathStr={plansPathStr}
             />
           ) : (
             ""

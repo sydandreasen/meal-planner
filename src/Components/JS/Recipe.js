@@ -70,7 +70,7 @@ export const RecipeInstructions = () => {
 export const Recipe = (props) => {
   return (
     <Modal
-      footer={[<div></div>]}
+      footer={<div></div>}
       className="whole-recipe"
       visible={props.visible}
       onCancel={() => props.cancel(false)}
