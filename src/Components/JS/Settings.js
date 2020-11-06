@@ -25,7 +25,7 @@ function Settings(props) {
     <div className="settings">
       <h1>Customize your Account Settings</h1>
       <h2>Views</h2>
-      <div className="setting">
+      {/* <div className="setting">
         <p>Set which page appears upon login :</p>
         <Select
           style={{ margin: "10px" }}
@@ -39,7 +39,7 @@ function Settings(props) {
           <Option value={"groceries"}>Groceries</Option>
         </Select>
       </div>
-      <br />
+      <br /> */}
       <div className="setting">
         <p>
           Within the meal planning page, set which layout appears by default :
@@ -68,6 +68,7 @@ function Settings(props) {
         <div className="goal">
           <p>Calories :</p>
           <InputNumber
+            min={0}
             style={{ margin: "10px" }}
             defaultValue={DbSettings.goals.calories.amount} // query from current settings
             onChange={(value) =>
@@ -79,6 +80,7 @@ function Settings(props) {
         <div className="goal">
           <p>Carbohydrates ({DbSettings.goals.carbohydrates.unit}) :</p>
           <InputNumber
+            min={0}
             style={{ margin: "10px" }}
             defaultValue={DbSettings.goals.carbohydrates.amount} // query from current settings
             onChange={(value) =>
@@ -91,6 +93,7 @@ function Settings(props) {
         <div className="goal">
           <p>Protein ({DbSettings.goals.protein.unit}) :</p>
           <InputNumber
+            min={0}
             style={{ margin: "10px" }}
             defaultValue={DbSettings.goals.protein.amount} // query from current settings
             onChange={(value) =>
@@ -101,6 +104,7 @@ function Settings(props) {
         <div className="goal">
           <p>Fat ({DbSettings.goals.fat.unit}) :</p>
           <InputNumber
+            min={0}
             style={{ margin: "10px" }}
             defaultValue={DbSettings.goals.fat.amount} // query from current settings
             onChange={(value) =>
@@ -111,6 +115,7 @@ function Settings(props) {
         <div className="goal">
           <p>Sugar ({DbSettings.goals.sugar.unit}) :</p>
           <InputNumber
+            min={0}
             style={{ margin: "10px" }}
             defaultValue={DbSettings.goals.sugar.amount} // query from current settings
             onChange={(value) =>

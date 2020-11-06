@@ -265,6 +265,7 @@ export const FoodInfo = (props) => {
           <div className="quantity">
             <p>Quantity :</p>
             <InputNumber
+              min={1}
               style={{ margin: "10px", display: "block" }}
               defaultValue={1}
               onChange={(num) =>

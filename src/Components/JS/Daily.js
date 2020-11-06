@@ -35,6 +35,7 @@ export const DailyMeal = (props) => {
           <div>
             <InputNumber
               defaultValue={cell}
+              min={1}
               size="middle"
               onChange={(value) => {
                 // find array in plans, change the food with the food id and write data to props.mealPathStr
