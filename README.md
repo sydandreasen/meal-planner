@@ -1,52 +1,45 @@
 # Meal Planner
 
----
+## Table of Contents
 
-### Table of Contents
-
-1. [Tech Stack] (#tech-stack)
-2. [Authentication] (#authentication)
-3. [Dashboard] (#dashboard)
-4. [Meal Planning] (#meal-planning)
-5. [Settings] (#settings)
-6. [Groceries] (#groceries) (a wishlist page with paid API subscription)
-7. [Recipes] (#recipes) (a wishlist page with paid API subscription)
+1. [Tech Stack](#tech-stack)
+2. [Authentication](#authentication)
+3. [Dashboard](#dashboard)
+4. [Meal Planning](#meal-planning)
+5. [Settings](#settings)
+6. [Groceries](#groceries) (a wishlist page with paid API subscription)
+7. [Recipes](#recipes) (a wishlist page with paid API subscription)
 
 ---
 
-### Tech Stack {#tech-stack}
+## Tech Stack{#tech-stack}
 
 **Framework :** React.js
 
 - **Top Library Used :** Ant Design
-  **API :** Edamam (free subscription)
-  **Hosting :** Google Firebase
-  **Authentication :** Google Firebase
-  **Database :** Google Firebase's NoSQL Real-Time Database
 
----
+**API :** Edamam (free subscription)
+**Hosting :** Google Firebase
+**Authentication :** Google Firebase
+**Database :** Google Firebase's NoSQL Real-Time Database
 
-### Authentication {#authentication}
+## Authentication{#authentication}
 
 - SignUp with email and password
-- Login with email and password to reach [Dashboard] (#dashboard)
+- Login with email and password to reach [Dashboard](#dashboard)
 - Reset Password
 
----
-
-### Dashboard {#dashboard}
+## Dashboard{#dashboard}
 
 - Navigate between pages or logout with the nav menu
 - **Current Pages :**
-  - 1. [Meal Planning] (#meal-planning)
-  - 2. [Settings] (#settings)
+  - 1. [Meal Planning](#meal-planning)
+  - 2. [Settings](#settings)
 - **Pages Opened Up With Paid API Subscription :**
-  - 1. [Groceries] (#groceries)
-  - 2. [Recipes] (#recipes)
+  - 1. [Groceries](#groceries)
+  - 2. [Recipes](#recipes)
 
----
-
-### Meal Planning {#meal-planning}
+## Meal Planning{#meal-planning}
 
 **All Views :**
 
@@ -80,11 +73,9 @@
 - Display planned qantity of each food (in servings)
 - Expand individual foods to see nutritional information for planned number of servings
 - Edit quantities of food, or remove them
-- Display bar graphs that compares planned calories, carbs, fat, protein, and sugar compared to goal amounts (specified in the [Settings] (#settings) page)
+- Display bar graphs that compares planned calories, carbs, fat, protein, and sugar compared to goal amounts (specified in the [Settings](#settings) page)
 
----
-
-### Settings {#settings}
+## Settings{#settings}
 
 - View Settings
   - Which monthly/daily/weekly view is default on the Meal Planning page
@@ -94,17 +85,13 @@
 - Meal Settings
   - Edit number, order, color, and names of daily meals
 
----
-
-### Groceries (a wishlist page with paid API subscription) {#groceries}
+## Groceries (a wishlist page with paid API subscription){#groceries}
 
 - Categorize foods based on area of grocery store to commonly find the item
 - Combine same foods across days into total quantity
 - Allow to check off/delete items
 
----
-
-### Recipes (a wishlist page with paid API subscription) {#recipes}
+## Recipes (a wishlist page with paid API subscription){#recipes}
 
 - Add favorite recipes with API search or manually input recipes to save to account
 - Recipes can be added to meal plans instead of searching API for foods
