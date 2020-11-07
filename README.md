@@ -14,17 +14,17 @@
 
 ## Tech Stack
 
-**Framework :** React.js
+- **Framework :** React.js
 
-- **Top Library Used :** Ant Design
+  - **Top Library Used :** Ant Design
 
-**API :** Edamam (free subscription)
+- **API :** Edamam (free subscription)
 
-**Hosting :** Google Firebase
+- **Hosting :** Google Firebase
 
-**Authentication :** Google Firebase
+- **Authentication :** Google Firebase
 
-**Database :** Google Firebase's NoSQL Real-Time Database
+- **Database :** Google Firebase's NoSQL Real-Time Database
 
 ## Authentication
 
@@ -88,17 +88,17 @@
 - Meal Settings
   - Edit number, order, color, and names of daily meals
 
-## Groceries(#groceries)
+## Groceries
 
-#### (a wishlist page with paid API subscription)
+##### _a wishlist page with paid API subscription_
 
 - Categorize foods based on area of grocery store to commonly find the item
 - Combine same foods across days into total quantity
 - Allow to check off/delete items
 
-## Recipes(#recipes)
+## Recipes
 
-#### (a wishlist page with paid API subscription)
+##### _a wishlist page with paid API subscription_
 
 - Add favorite recipes with API search or manually input recipes to save to account
 - Recipes can be added to meal plans instead of searching API for foods
