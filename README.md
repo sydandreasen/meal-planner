@@ -38,7 +38,7 @@
 - **Current Pages :**
   - 1. [Meal Planning](#meal-planning)
   - 2. [Settings](#settings)
-- **Pages Opened Up With Paid API Subscription :**
+- **Pages Made Possible With Paid API Subscription :**
   - 1. [Groceries](#groceries)
   - 2. [Recipes](#recipes)
 
