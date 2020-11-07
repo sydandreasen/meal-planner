@@ -14,28 +14,8 @@ export const loadingMessage = () => {
   return options[random];
 };
 
-export const foodNutrients = (props) => {
-  let foodCals = props.food.cals; // by serving
-  let foodQuantity = props.food.quantity;
-  foodCals *= foodQuantity;
-  return { cals: foodCals, quantity: foodQuantity };
-};
-
-export const mealNutrients = (props) => {
-  let mealCals = 0;
-  props.foods.forEach((food) => (mealCals += food.cals)); // cals planned, not by serving
-  return { cals: mealCals };
-};
-
-export const dayNutrients = (props) => {
-  let dayCals = 0;
-  props.meals.forEach((meal) =>
-    meal.foods.forEach((food) => (dayCals += food.cals))
-  );
-  return { cals: dayCals };
-};
-
 // run parser request to find foodId from a search string
+// contains a few callback functions for presenting food information
 export const parseRequest = async (
   search,
   setFoodId, // function
@@ -115,6 +95,7 @@ export const parseRequest = async (
 };
 
 // make nutrients request from foodId and measurement URI
+// set list of returned food info
 export const nutrientRequest = async (foodIds, measureURIs, setFoodInfo) => {
   const quantity = 1;
   let tempInfo = [];

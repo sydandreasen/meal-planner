@@ -3,6 +3,7 @@ import { Button } from "antd";
 import "../SCSS/Recipes.scss";
 import { RecipeCard } from "./Recipe.js";
 
+// beginning framework for Recipes page; fill out with more API freedom
 function Recipes(props) {
   // example
   const recipeKeys = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

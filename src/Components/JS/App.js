@@ -30,11 +30,12 @@ function App() {
     });
   }, []);
 
-  let message = loadingMessage();
+  let message = loadingMessage(); // select randomly from list of messages
 
   session(); // logout when session ends
   useBeforeunload(() => localStorage.clear()); // clear data from local storage when tab/window closes or refreshes
 
+  // manage routing of basic pages and maintain consistent header and footer
   return (
     <div className="App">
       <header>

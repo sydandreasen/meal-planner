@@ -14,6 +14,7 @@ import { CloseCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 import { updateWChild, writeData, writeWChild } from "./DbHandler.js";
 import Reorder, { reorder } from "react-reorder";
 
+// a subset of settings, allowing customization of meal names, order, and colors
 function MealSettings(props) {
   const [meals, setMeals] = useState(undefined); // for easy access and management of meal settings
   const [showAddMeal, setShowAddMeal] = useState(false); // modal with form to add meal

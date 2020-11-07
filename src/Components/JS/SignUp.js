@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { writeData } from "./DbHandler.js";
 import base from "./Firebase.js";
 
+// sign up page
 function SignUp(props) {
   const handleSignUp = async (values) => {
     try {
@@ -17,14 +18,14 @@ function SignUp(props) {
         defaultPage: "meal planning",
         defaultView: "weekly",
       };
-      writeData(settingsPathStr + "/view", viewSettings);
+      writeData(settingsPathStr + "/view", viewSettings); // default views upon signup
 
       let mealSettings = [
         { name: "Breakfast", key: 1, color: "red" },
         { name: "Lunch", key: 2, color: "blue" },
         { name: "Dinner", key: 3, color: "green" },
       ];
-      writeData(settingsPathStr + "/meals", mealSettings);
+      writeData(settingsPathStr + "/meals", mealSettings); // default meals upon signup
 
       let goalSettings = {
         calories: {
@@ -48,7 +49,7 @@ function SignUp(props) {
           unit: "g",
         },
       };
-      writeData(settingsPathStr + "/goals", goalSettings);
+      writeData(settingsPathStr + "/goals", goalSettings); // default goals upon signup
 
       window.location.href = "/";
     } catch (error) {

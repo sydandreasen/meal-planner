@@ -3,6 +3,7 @@ import { LeftOutlined, RightOutlined, DashOutlined } from "@ant-design/icons";
 import { Tooltip, Badge } from "antd";
 import "../SCSS/Weekly.scss";
 
+// weekly meal planning view
 export const Weekly = (props) => {
   const currentDate = props.currentDate;
   const months = [
@@ -131,6 +132,7 @@ export const Weekly = (props) => {
   );
 };
 
+// a single day's card containing all the meals and total cals for the day
 export const WeekdayCard = (props) => {
   let dateCompare1 = props.date.toDateString();
   let dateCompare2 = props.currentDate.toDateString();
@@ -165,6 +167,7 @@ export const WeekdayCard = (props) => {
   );
 };
 
+// individual meals to be repeated within a single day
 export const WeeklyMeal = (props) => {
   return (
     <div className="meal">

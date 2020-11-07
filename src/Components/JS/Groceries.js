@@ -1,6 +1,7 @@
 import React from "react";
 import "../SCSS/Groceries.scss";
 
+// beginning framework for Grocery page; fill out with more API freedom
 function Groceries(props) {
   return (
     <div>

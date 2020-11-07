@@ -1,68 +1,112 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Meal Planner
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+### Table of Contents
 
-### `npm start`
+1. [Tech Stack] (#tech-stack)
+2. [Authentication] (#authentication)
+3. [Dashboard] (#dashboard)
+4. [Meal Planning] (#meal-planning)
+5. [Settings] (#settings)
+6. [Groceries] (#groceries) (a wishlist page with paid API subscription)
+7. [Recipes] (#recipes) (a wishlist page with paid API subscription)
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### Tech Stack {#tech-stack}
 
-### `npm test`
+**Framework :** React.js
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Top Library Used :** Ant Design
+  **API :** Edamam (free subscription)
+  **Hosting :** Google Firebase
+  **Authentication :** Google Firebase
+  **Database :** Google Firebase's NoSQL Real-Time Database
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Authentication {#authentication}
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+- SignUp with email and password
+- Login with email and password to reach [Dashboard] (#dashboard)
+- Reset Password
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+### Dashboard {#dashboard}
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- Navigate between pages or logout with the nav menu
+- **Current Pages :**
+  - 1. [Meal Planning] (#meal-planning)
+  - 2. [Settings] (#settings)
+- **Pages Opened Up With Paid API Subscription :**
+  - 1. [Groceries] (#groceries)
+  - 2. [Recipes] (#recipes)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Meal Planning {#meal-planning}
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+**All Views :**
 
-## Learn More
+- Call to API to Add Foods by Serving Count
+- Navigate to dates sequentially or 'jump to today'
+- Change view (monthly/weekly/daily)
+- Wishlist item with more API freedom : export and/or generate grocery list from user-specified planned days
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**Monthly View :**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Display names of foods planned for each meal in the month
+- Select different dates
+  - Selecting a date and then switching to Daily View is a quick way to navigate without using left or right arrows on daily page
+- **Wishlist Items with More API Freedom :**
+  - Display calorie totals on each individual day
+  - Display calories next to each food name
+  - Graph daily planned nutrients across the month to see change over time in a visual way
 
-### Code Splitting
+**Weekly View :**
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+- Display names of foods planned for each meal in the week
+- Select different dates, like in Monthly View
+- **Wishlist Items with More API Freedom :**
+  - Display calorie totals on each individual day, meal, and food
+  - Graph planned nutrients as line graph over time for the week
 
-### Analyzing the Bundle Size
+**Daily View :**
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+- Display names of foods planned for each meal in the day
+- Display calories for each food, as well as meal and day totals
+- Display planned qantity of each food (in servings)
+- Expand individual foods to see nutritional information for planned number of servings
+- Edit quantities of food, or remove them
+- Display bar graphs that compares planned calories, carbs, fat, protein, and sugar compared to goal amounts (specified in the [Settings] (#settings) page)
 
-### Making a Progressive Web App
+---
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+### Settings {#settings}
 
-### Advanced Configuration
+- View Settings
+  - Which monthly/daily/weekly view is default on the Meal Planning page
+  - With paid subscription to API and addition of more pages, set which page (Meal Planning, Groceries, or Recipes) is the default page to display
+- Daily Nutritional Goals
+  - For Calories, carbohydrates, protein, fat, and sugar
+- Meal Settings
+  - Edit number, order, color, and names of daily meals
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+---
 
-### Deployment
+### Groceries (a wishlist page with paid API subscription) {#groceries}
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+- Categorize foods based on area of grocery store to commonly find the item
+- Combine same foods across days into total quantity
+- Allow to check off/delete items
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+### Recipes (a wishlist page with paid API subscription) {#recipes}
+
+- Add favorite recipes with API search or manually input recipes to save to account
+- Recipes can be added to meal plans instead of searching API for foods
+- Show overview recipe card and then click into it for more details, ingredients, and instructions
+- Allow to edit or delete recipes from account

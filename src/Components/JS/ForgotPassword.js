@@ -4,6 +4,7 @@ import { Form, Input, Button } from "antd";
 import "../SCSS/ForgotPassword.scss";
 import { auth } from "./Firebase.js";
 
+// the page that allows someone to reset their password by sending an email to themselves
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [emailHasBeenSent, setEmailHasBeenSent] = useState(false);

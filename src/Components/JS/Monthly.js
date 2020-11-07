@@ -9,6 +9,7 @@ import {
 } from "@ant-design/icons";
 import "../SCSS/Monthly.scss";
 
+// the monthly meal planning view
 export const Monthly = (props) => {
   const currentDate = props.currentDate;
   const months = [
@@ -180,6 +181,7 @@ export const Monthly = (props) => {
   );
 };
 
+// individual meals to be repeated within each day
 export const MonthlyMeal = (props) => {
   return (
     <div>
@@ -199,6 +201,7 @@ export const MonthlyMeal = (props) => {
   );
 };
 
+// individual days to be repeated in the week
 export const DayCard = (props) => {
   let dateCompare1 = props.date.toDateString();
   let dateCompare2 = props.currentDate.toDateString();
@@ -237,6 +240,7 @@ export const DayCard = (props) => {
   );
 };
 
+// individual weeks to be repeated inside the month
 export const Week = (props) => {
   const weekToMatch = props.weekNum;
   let daysInWeek = [];

@@ -12,6 +12,7 @@ import {
 import "../SCSS/NavMenu.scss";
 import base from "./Firebase";
 
+// navigation between pages
 function NavMenu(props) {
   const [menuCollapsed, setMenuCollapsed] = useState(true);
   const toggleCollapsed = () => setMenuCollapsed(!menuCollapsed);

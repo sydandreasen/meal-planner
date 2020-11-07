@@ -1,6 +1,7 @@
 import React from "react";
 import error from "../../Images/404error.png";
 
+// 404 error page
 const ErrorPage = (props) => {
   return (
     <div>

@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }) => {
     });
   }, []);
 
+  // hasn't updated auth state yet
   if (pending) {
     return <div></div>;
   }

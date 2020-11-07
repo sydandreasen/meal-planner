@@ -9,6 +9,7 @@ import Settings from "./Settings.js";
 import base from "./Firebase.js";
 const db = base.database();
 
+// manage which page is shown, maintaining a consistent navmenu
 function Dashboard(props) {
   const [defaultView, setDefaultView] = useState("");
   const [page, setPage] = useState("");

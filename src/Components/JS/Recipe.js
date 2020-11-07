@@ -3,6 +3,7 @@ import { Card, Descriptions, Table, Modal } from "antd";
 import { EllipsisOutlined, CloseCircleOutlined } from "@ant-design/icons";
 const { Meta } = Card;
 
+// the details about a recipe, not including ingredients and instructions
 export const RecipeDetail = () => {
   return (
     <div className="details">
@@ -16,6 +17,7 @@ export const RecipeDetail = () => {
   );
 };
 
+// displays recipe ingredients
 export const RecipeIngredients = () => {
   return (
     <div className="ingredients">
@@ -45,6 +47,7 @@ export const RecipeIngredients = () => {
   );
 };
 
+// displays recipe instructions
 export const RecipeInstructions = () => {
   return (
     <div className="instructions">
@@ -67,6 +70,7 @@ export const RecipeInstructions = () => {
   );
 };
 
+// contains all expanded recipe information in a modal
 export const Recipe = (props) => {
   return (
     <Modal
@@ -86,6 +90,7 @@ export const Recipe = (props) => {
   );
 };
 
+// contains basic overview of recipe listed in recipe page
 export const RecipeCard = (props) => {
   // example title
   const recipeTitle = "Example Banana Bread";

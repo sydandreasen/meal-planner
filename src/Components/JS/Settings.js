@@ -7,6 +7,7 @@ import "../SCSS/Settings.scss";
 const db = base.database();
 const { Option } = Select;
 
+// allow the user to customize various features of the app for themselves
 function Settings(props) {
   const settingsPathStr = "users/" + props.uid + "/settings";
   const [DbSettings, setDbSettings] = useState({});

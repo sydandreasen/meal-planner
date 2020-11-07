@@ -26,6 +26,8 @@ const db = base.database();
 
 const { Option } = Select;
 
+// the meal planning page
+// a wrapper containing consistent actions and will contain the current monthly/weekly/daily view
 function MealPlanning(props) {
   const [view, setView] = useState(""); // monthly/weekly/daily
   const [currentDate, setCurrentDate] = useState(new Date()); // date selected
@@ -143,6 +145,7 @@ function MealPlanning(props) {
   }
 }
 
+// the modal for searching for foods, calling to API
 export const Search = (props) => {
   const [searchStr, setSearchStr] = useState("");
   const [showFoodInfo, setShowFoodInfo] = useState(false);
@@ -197,6 +200,7 @@ export const Search = (props) => {
   );
 };
 
+// displaying retrieved food information
 export const FoodInfo = (props) => {
   const [showNutrients, setShowNutrients] = useState(true);
   const [addFood, setAddFood] = useState({});

@@ -21,6 +21,7 @@ import "../SCSS/Daily.scss";
 import { writeData } from "./DbHandler.js";
 import ProgressGraph from "./ProgressGraph.js";
 
+// individual meals in daily view containing meal name, cals, and table of foods
 export const DailyMeal = (props) => {
   const [edit, setEdit] = useState(false);
   const [expandKey, setExpandKey] = useState("");
@@ -163,6 +164,7 @@ export const DailyMeal = (props) => {
     },
   ];
 
+  // collect list of foods for Table datasource format
   let foods = [];
   if (props.plans) {
     props.plans.forEach((food, index) => {
@@ -205,6 +207,7 @@ export const DailyMeal = (props) => {
   );
 };
 
+// the card containing all daily meals and day's calories
 export const DailyCard = (props) => {
   const [mealCals, setMealCals] = useState({});
   const [dayCals, setDayCals] = useState(0);
@@ -272,6 +275,7 @@ export const DailyCard = (props) => {
   );
 };
 
+// daily view containing daily card and progress graphs for nutrients
 export const Daily = (props) => {
   const [dayNutrients, setDayNutrients] = useState({});
   const [dayTotals, setDayTotals] = useState({});

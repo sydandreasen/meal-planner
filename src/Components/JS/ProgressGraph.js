@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ComposedChart, XAxis, YAxis, Legend, Bar } from "recharts";
 
+// graphs that compare goal nutrition values to total planned nutrition values
 const ProgressGraph = (props) => {
   const [data, setData] = useState([
     {
