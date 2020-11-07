@@ -12,7 +12,7 @@
 
 ---
 
-## Tech Stack(#tech-stack)
+## Tech Stack
 
 **Framework :** React.js
 
@@ -26,13 +26,13 @@
 
 **Database :** Google Firebase's NoSQL Real-Time Database
 
-## Authentication(#authentication)
+## Authentication
 
 - SignUp with email and password
 - Login with email and password to reach [Dashboard](#dashboard)
 - Reset Password
 
-## Dashboard(#dashboard)
+## Dashboard
 
 - Navigate between pages or logout with the nav menu
 - **Current Pages :**
@@ -42,7 +42,7 @@
   - 1. [Groceries](#groceries)
   - 2. [Recipes](#recipes)
 
-## Meal Planning(#meal-planning)
+## Meal Planning
 
 **All Views :**
 
@@ -78,7 +78,7 @@
 - Edit quantities of food, or remove them
 - Display bar graphs that compares planned calories, carbs, fat, protein, and sugar compared to goal amounts (specified in the [Settings](#settings) page)
 
-## Settings(#settings)
+## Settings
 
 - View Settings
   - Which monthly/daily/weekly view is default on the Meal Planning page
@@ -88,13 +88,17 @@
 - Meal Settings
   - Edit number, order, color, and names of daily meals
 
-## Groceries(#groceries) (a wishlist page with paid API subscription)
+## Groceries(#groceries)
+
+#### (a wishlist page with paid API subscription)
 
 - Categorize foods based on area of grocery store to commonly find the item
 - Combine same foods across days into total quantity
 - Allow to check off/delete items
 
-## Recipes(#recipes) (a wishlist page with paid API subscription)
+## Recipes(#recipes)
+
+#### (a wishlist page with paid API subscription)
 
 - Add favorite recipes with API search or manually input recipes to save to account
 - Recipes can be added to meal plans instead of searching API for foods
