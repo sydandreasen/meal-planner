@@ -22,6 +22,7 @@ import {
 import base from "./Firebase.js";
 import { writeData } from "./DbHandler.js";
 import moment from "moment";
+import { store } from "react-notifications-component";
 const db = base.database();
 
 const { Option } = Select;
@@ -339,6 +340,20 @@ export const FoodInfo = (props) => {
                 props.plansPathStr + "/" + add.date + "/" + add.meal,
                 mealFoods
               );
+              // notify the user that it was added
+              store.addNotification({
+                title: "Success!",
+                message: `${add.quantity} serving(s) of ${add.name} added to ${add.meal} on ${add.date}.`,
+                type: "success",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated", "animate__fadeIn"],
+                animationOut: ["animate__animated", "animate__fadeOut"],
+                dismiss: {
+                  duration: 6000,
+                  onScreen: true,
+                },
+              });
             }}
           >
             Add it!
