@@ -28,7 +28,7 @@ export const DailyMeal = (props) => {
   const columns = [
     { title: "Food", dataIndex: "food", key: "food" },
     {
-      title: "Quantity",
+      title: "Quantity (Servings)",
       dataIndex: "quantity",
       key: "quantity",
       render: (cell, row) =>

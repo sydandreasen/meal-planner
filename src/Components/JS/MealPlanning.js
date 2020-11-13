@@ -268,7 +268,7 @@ export const FoodInfo = (props) => {
           </Select>
           <br />
           <div className="quantity">
-            <p>Quantity :</p>
+            <p>Quantity (Servings):</p>
             <InputNumber
               min={1}
               style={{ margin: "10px", display: "block" }}
