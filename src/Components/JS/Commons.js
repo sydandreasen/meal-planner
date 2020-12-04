@@ -18,9 +18,9 @@ export const loadingMessage = () => {
 // contains a few callback functions for presenting food information
 export const parseRequest = async (
   search,
-  setFoodId, // function
-  setMeasureURI, // function
-  setFoodWord, // function
+  // setFoodId, // function
+  // setMeasureURI, // function
+  // setFoodWord, // function
   setFoodInfo // function
 ) => {
   // get the URL encoded for the parser request
@@ -67,14 +67,11 @@ export const parseRequest = async (
         });
       }
 
-      setFoodId(foodId);
-      setMeasureURI(measureURI);
-      setFoodWord(foodWord);
+      // setFoodId(foodId);
+      // setMeasureURI(measureURI);
+      // setFoodWord(foodWord);
 
-      // then find nutrients information
-      await nutrientRequest([foodId], [measureURI], (foodInfo) =>
-        setFoodInfo(foodInfo)
-      );
+      setFoodInfo(response.data.hints);
     })
     .catch(() =>
       store.addNotification({

@@ -5,11 +5,12 @@ import {
   Button,
   Select,
   Modal,
+  Table,
   Descriptions,
   DatePicker,
   Spin,
 } from "antd";
-import { parseRequest } from "./Commons.js";
+import { nutrientRequest, parseRequest } from "./Commons.js";
 import "../SCSS/MealPlanning.scss";
 import { Monthly } from "./Monthly.js";
 import { Weekly } from "./Weekly.js";
@@ -149,6 +150,8 @@ function MealPlanning(props) {
 // the modal for searching for foods, calling to API
 export const Search = (props) => {
   const [searchStr, setSearchStr] = useState("");
+  const [showFoodList, setShowFoodList] = useState(false);
+  const [resultList, setResultList] = useState([]);
   const [showFoodInfo, setShowFoodInfo] = useState(false);
   const [foodInfo, setFoodInfo] = useState([]);
   const [foodId, setFoodId] = useState("");
@@ -157,12 +160,33 @@ export const Search = (props) => {
     if (searchStr) {
       parseRequest(
         searchStr,
-        (foodId) => setFoodId(foodId),
-        (measureURI) => measureURI,
-        (foodWord) => setFoodWord(foodWord),
-        (foodInfo) => setFoodInfo(foodInfo)
+        // () => {}, //(foodId) => setFoodId(foodId),
+        // () => {}, //(measureURI) => measureURI,
+        // () => {}, //(foodWord) => setFoodWord(foodWord),
+        (foodList) =>
+          setResultList(() => {
+            let list = [];
+            foodList.forEach((food, index) => {
+              // figure out if food has a serving measurement and then push it
+              for (let measure of food.measures) {
+                if (measure.label === "Serving") {
+                  list.push({
+                    id: food.food.foodId,
+                    label: food.food.label,
+                    brand: food.food.brand,
+                    category: food.food.category,
+                    measures: food.measures,
+                    key: index,
+                  });
+                  break;
+                }
+              }
+            });
+            return list;
+          })
       );
-      setShowFoodInfo(true);
+
+      setShowFoodList(true);
     }
   };
 
@@ -175,15 +199,72 @@ export const Search = (props) => {
       centered={true}
       closeIcon={<CloseCircleOutlined />}
       title="Food Search"
+      width={"85%"}
     >
       <Input
         placeholder="Search for a Food"
         onChange={(e) => setSearchStr(e.target.value)}
         onPressEnter={() => getFood(searchStr)}
       />
+      {/* TODO : add intermediate step of letting user pick between all the food results based on name, category, etc before calling in nutrition information */}
       <Button type="primary" onClick={() => getFood(searchStr)}>
         Search
       </Button>
+
+      {showFoodList ? (
+        <Table
+          columns={[
+            {
+              dataIndex: "label",
+              title: "Label",
+              key: "label",
+            },
+            {
+              dataIndex: "brand",
+              title: "Brand",
+              key: "brand",
+            },
+            {
+              dataIndex: "category",
+              title: "Category",
+              key: "category",
+            },
+            {
+              dataIndex: "select",
+              title: "Select",
+              key: "select",
+              render: (text, record) => (
+                <Button
+                  type="secondary"
+                  onClick={() => {
+                    setShowFoodList(false);
+                    setFoodId(record.id);
+                    setFoodWord(record.label);
+                    // find the serving measure URI
+                    let servingURI = "";
+                    for (let measure of record.measures) {
+                      if (measure.label === "Serving") {
+                        servingURI = measure.uri;
+                        break;
+                      }
+                    }
+                    nutrientRequest([record.id], [servingURI], (foodInfo) =>
+                      setFoodInfo(foodInfo)
+                    );
+                    setShowFoodInfo(true);
+                    // TODO allow to choose a measurement
+                  }}
+                >
+                  Select {record.label}
+                </Button>
+              ),
+            },
+          ]}
+          dataSource={resultList}
+        />
+      ) : (
+        ""
+      )}
 
       {showFoodInfo ? (
         <FoodInfo
